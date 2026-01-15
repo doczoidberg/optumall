@@ -1,0 +1,10 @@
+/backend/vendor
+/backend/licensemanagement/vendor
+/backend/*.lock
+/backend/licensemanagement/public/upload
+/backend/licensemanagement/public/uploads
+*.docx#
+frontend/package-lock.json
+.vs/
+backend/licensemanagement/database/migrations/current-db.sql
+.claude/settings.local.json

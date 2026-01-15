@@ -1,0 +1,19 @@
+/*-------------------------------------------------------------------*/
+/* === Import template variables === */
+@import "variables";
+@import "base";
+
+/*-------------------------------------------------------------------*/
+/* === Core Styles === */
+@import "sidebar";
+@import "navbar";
+/*-------------------------------------------------------------------*/
+
+@import "popup";
+/* === Landing screens === */
+@import "landing-screens/login";
+@import "landing-screens/licenses";
+@import "landing-screens/users";
+@import "landing-screens/profile";
+
+@import "responive";

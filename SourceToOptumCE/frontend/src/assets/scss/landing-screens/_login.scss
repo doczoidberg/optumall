@@ -1,0 +1,211 @@
+.login-page{
+    padding: 0;
+    background: transparent linear-gradient(122deg, #F5F5F5 0%, #D9D9D9 100%) 0% 0% no-repeat padding-box;
+    position: relative;
+    .container{
+        height: calc(100vh - 64px);
+        position: relative;
+    }
+    @media screen and (max-width: 1366px) {
+        .container{
+            height: calc(100vh);
+        }
+    }
+    .item-user{
+        cursor: pointer;
+    }
+    .navbar-default{
+        background-color: #272727;
+        height: 64px;
+        // max-width: 1920px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .logo_licen{
+        width: 125px;
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translate(0, -50%);
+    }
+    .btn-question{
+        padding: 0;
+        border: unset;
+        background: #272727;
+        margin-right: 23px;
+        margin-top: 23px;
+        i{
+            font-size: 18px;
+            color: #fff;
+
+        }
+    }
+    .question{
+        background-color: #272727;
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        right: 1%;
+        top: 50%;
+        transform: translate(-1%, -50%);
+    }
+    .btn-question:focus{
+        outline: none;
+        outline-style: none;
+        outline-offset: unset;
+
+    }
+    .login-panel{
+        width: 576px;
+        // height: 288px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 0;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+        box-shadow: 0px 10px 20px #0000001A;
+        border: none;
+        margin-top: 0;
+        padding: 55px 48px 65px;
+    }
+    .w-panel-register{
+        width: 512px;
+        padding: 55px 64px 65px;
+        input[type=checkbox]{
+            transform: scale(1.5);
+            -webkit-transform: scale(1.5);
+            -moz-transform: scale(1.5);
+            -ms-transform: scale(1.5);
+            -o-transform: scale(1.5);
+        }
+    }
+    .h-40{
+        height: 40px;
+    }
+    .mg-bottom-40{
+        margin-bottom: 44px;
+    }
+    .pd-bt-64{
+        padding:55px 64px 25px;
+    }
+    .panel-body{
+        padding: 0;
+    }
+    .panel-flex{
+        display: flex;
+    }
+    .panel-default>.panel-heading{
+        background-color: #FFF;
+        border-bottom: unset;
+        padding: 0;
+    }
+    .login_logo{
+        width: 57%;
+        // padding-top: 40px;
+        display: block;
+        margin: auto;
+        &.mb-64{
+            margin-bottom: 41px;
+        }
+    }
+    .form-control{
+        background-color: #E9EAEB;
+        color: #3A3A3A;
+        border-radius: 0;
+        border: none;
+        box-shadow: unset;
+        font-size: 14px;
+    }
+    .form-label{
+        color: #3A3A3A;
+        font: bold normal normal 12px/15px Lato;
+    }
+    .btn-lg{
+        width: 208px;
+        height: 64px;
+        margin: auto;
+        border-radius: 0;
+        padding: 0;
+        line-height: 64px;
+        background-color: $primary;
+        box-shadow: 0px 5px 10px #00000029;
+        color: #FFFFFF;
+        font-size:18px;
+        // margin-top:60px;
+    }
+    .btn-black{
+        background-color: $btn-black !important;
+    }
+    .pd-btn-register{
+        margin-top: 20px;
+        // margin-bottom: 35px;
+    }
+    .fg-label{
+        display: block;
+        text-align: right;
+        padding: 0 0 15px !important;
+    }
+    .fg-password{
+        color: $primary;
+        font-size: 14px;
+        font-style: italic;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .user-change{
+        display: block;
+        position: fixed;
+        bottom: 5%;
+        right: 5%;
+        z-index: 10;
+        .item-user{
+            font-size: 25px;
+            text-shadow: 2px 3px 6px #0000005C;
+            color: #FFF;
+        }
+    }
+    .message{
+        text-align: center;
+        font-size: 24px;
+    }
+    .gotologin{
+        color: $colorbutton;
+        text-align: center;
+        display: block;
+        font-style: italic;
+        font-size: 18px;
+        padding-top: 30px;
+    }
+    .checkbox{
+
+        label{
+            font: normal normal normal 14px/20px Lato;
+            padding: 0px 25px;
+            cursor: default;
+        }
+        a{
+            color: $primary;
+            cursor: pointer;
+            margin-left: 3px;
+        }
+        a.link{
+            font: normal normal bold 14px/20px Lato;
+        }
+        i{
+            font: italic normal bold 14px/17px Lato;
+        }
+    }
+    .align-center{
+        text-align: center;
+    }
+    .alert{
+        a{
+            color: #E4A624;
+            text-decoration: none;
+        }
+        a:hover{
+            color: #E4A624;
+        }
+    }
+}

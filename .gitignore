@@ -1,0 +1,69 @@
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.example
+
+# Node.js (Angular/Firebase Functions)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Angular Build
+optumadmin/optumadmin/dist/
+optumadmin/optumadmin/.angular/
+optumadmin/optumadmin/tmp/
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# PHP/Laravel
+SourceToOptumCE/backend/licensemanagement/vendor/
+SourceToOptumCE/backend/licensemanagement/storage/*.key
+SourceToOptumCE/backend/licensemanagement/storage/logs/*.log
+SourceToOptumCE/backend/licensemanagement/storage/framework/cache/*
+SourceToOptumCE/backend/licensemanagement/storage/framework/sessions/*
+SourceToOptumCE/backend/licensemanagement/storage/framework/views/*
+SourceToOptumCE/backend/licensemanagement/bootstrap/cache/*
+
+# Composer
+composer.phar
+composer.lock
+
+# Database
+*.sqlite
+*.sqlite-journal
+
+# Backup files
+*.bak
+*.backup
+*.sql.gz
+
+# Temporary files
+*.tmp
+*.temp

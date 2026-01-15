@@ -1,0 +1,518 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1200">
+  <defs>
+    <!-- Crow's Foot Markers -->
+    <marker id="crowsfoot-many" markerWidth="20" markerHeight="20" refX="18" refY="10" orient="auto">
+      <path d="M 0 10 L 18 4 M 0 10 L 18 10 M 0 10 L 18 16" stroke="#475569" stroke-width="1.5" fill="none"/>
+    </marker>
+    <marker id="crowsfoot-one" markerWidth="20" markerHeight="20" refX="18" refY="10" orient="auto">
+      <line x1="12" y1="4" x2="12" y2="16" stroke="#475569" stroke-width="1.5"/>
+      <line x1="18" y1="4" x2="18" y2="16" stroke="#475569" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrow-cascade" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#dc2626"/>
+    </marker>
+
+    <!-- Gradients -->
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e3a8a"/>
+      <stop offset="50%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="userDomain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#dbeafe"/>
+      <stop offset="100%" style="stop-color:#bfdbfe"/>
+    </linearGradient>
+    <linearGradient id="licenseDomain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fee2e2"/>
+      <stop offset="100%" style="stop-color:#fecaca"/>
+    </linearGradient>
+    <linearGradient id="productDomain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d1fae5"/>
+      <stop offset="100%" style="stop-color:#a7f3d0"/>
+    </linearGradient>
+    <linearGradient id="usageDomain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7"/>
+      <stop offset="100%" style="stop-color:#fde68a"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="3" dy="3" stdDeviation="4" flood-opacity="0.2"/>
+    </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background with subtle pattern -->
+  <rect width="1800" height="1200" fill="#f8fafc"/>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+  </pattern>
+  <rect width="1800" height="1200" fill="url(#grid)"/>
+
+  <!-- Title Bar -->
+  <rect x="0" y="0" width="1800" height="70" fill="url(#headerGrad)"/>
+  <text x="900" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">License Management System</text>
+  <text x="900" y="55" text-anchor="middle" fill="#93c5fd" font-family="Arial, sans-serif" font-size="14">Entity Relationship Diagram (ERD)</text>
+
+  <!-- ==================== DOMAIN SECTIONS ==================== -->
+
+  <!-- USER & ORGANIZATION DOMAIN -->
+  <g transform="translate(30, 90)">
+    <rect width="440" height="520" rx="15" fill="url(#userDomain)" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>
+    <text x="220" y="28" text-anchor="middle" fill="#1e40af" font-family="Arial" font-size="16" font-weight="bold">USER &amp; ORGANIZATION DOMAIN</text>
+    <line x1="20" y1="40" x2="420" y2="40" stroke="#3b82f6" stroke-width="1"/>
+
+    <!-- IDENTITY TABLE -->
+    <g transform="translate(20, 55)">
+      <rect width="190" height="240" rx="8" fill="white" stroke="#2563eb" stroke-width="2"/>
+      <rect width="190" height="30" rx="8" fill="#2563eb"/>
+      <text x="95" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="13" font-weight="bold">identity</text>
+      <text x="160" y="20" fill="#bfdbfe" font-family="Arial" font-size="9">(User)</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#1e40af" font-weight="bold">id</text><text x="30" y="9" fill="#64748b">INT AUTO_INCREMENT</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#1e40af">account_id</text><text x="80" y="23" fill="#64748b">INT</text>
+        <text x="0" y="38" fill="#334155">email VARCHAR(250)</text><text x="140" y="38" fill="#22c55e" font-size="8">UQ</text>
+        <text x="0" y="52" fill="#334155">user_name VARCHAR(100)</text><text x="155" y="52" fill="#22c55e" font-size="8">UQ</text>
+        <text x="0" y="66" fill="#334155">password VARCHAR(250)</text>
+        <text x="0" y="80" fill="#334155">first_name, last_name</text>
+        <rect x="0" y="88" width="176" height="18" fill="#fce7f3" rx="3"/>
+        <text x="4" y="100" fill="#be185d" font-weight="bold">role TINYINT</text>
+        <text x="88" y="100" fill="#9d174d" font-size="9">0=user 1=admin 2=super</text>
+        <text x="0" y="120" fill="#334155">email_validated BIT</text>
+        <text x="0" y="134" fill="#334155">two_factor_enabled</text>
+        <text x="0" y="148" fill="#334155">avatar, title, street...</text>
+        <text x="0" y="162" fill="#334155">city, country, phone...</text>
+        <text x="0" y="176" fill="#64748b" font-style="italic">created_date DATETIME</text>
+      </g>
+    </g>
+
+    <!-- ACCOUNT TABLE -->
+    <g transform="translate(230, 55)">
+      <rect width="190" height="170" rx="8" fill="white" stroke="#f59e0b" stroke-width="2"/>
+      <rect width="190" height="30" rx="8" fill="#f59e0b"/>
+      <text x="95" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="13" font-weight="bold">account</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#92400e" font-weight="bold">id</text><text x="30" y="9" fill="#64748b">INT AUTO_INCREMENT</text>
+        <text x="0" y="24" fill="#334155">name VARCHAR(500)</text>
+        <rect x="0" y="32" width="176" height="18" fill="#fef3c7" rx="3"/>
+        <text x="4" y="44" fill="#92400e" font-weight="bold">type INT</text>
+        <text x="50" y="44" fill="#a16207" font-size="9">0=indiv 1=org 3=univ</text>
+        <text x="0" y="64" fill="#334155">domain VARCHAR(200)</text><text x="140" y="64" fill="#22c55e" font-size="8">UQ</text>
+        <text x="0" y="78" fill="#334155">origin VARCHAR(200)</text>
+        <text x="0" y="92" fill="#64748b" font-style="italic">_last_seen DATETIME</text>
+        <text x="0" y="106" fill="#64748b" font-style="italic">created_date DATETIME</text>
+      </g>
+    </g>
+
+    <!-- ACCOUNT_MEMBER TABLE -->
+    <g transform="translate(230, 240)">
+      <rect width="190" height="130" rx="8" fill="white" stroke="#8b5cf6" stroke-width="2"/>
+      <rect width="190" height="30" rx="8" fill="#8b5cf6"/>
+      <text x="95" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">account_member</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#5b21b6" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#5b21b6">account_id</text><text x="85" y="23" fill="#64748b" font-size="9">(org)</text>
+        <rect x="0" y="28" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="37" fill="#5b21b6">member_id</text><text x="85" y="37" fill="#64748b" font-size="9">(user)</text>
+        <rect x="0" y="46" width="176" height="16" fill="#ede9fe" rx="3"/>
+        <text x="4" y="58" fill="#7c3aed" font-weight="bold">member_role</text>
+        <text x="85" y="58" fill="#6d28d9" font-size="9">0=Normal 1=Admin</text>
+      </g>
+    </g>
+
+    <!-- ACCOUNT_GROUP TABLE -->
+    <g transform="translate(20, 310)">
+      <rect width="190" height="100" rx="8" fill="white" stroke="#06b6d4" stroke-width="2"/>
+      <rect width="190" height="30" rx="8" fill="#06b6d4"/>
+      <text x="95" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">account_group</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#0e7490" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#0e7490">account_id</text><text x="85" y="23" fill="#64748b" font-size="9">(org)</text>
+        <text x="0" y="38" fill="#334155">name VARCHAR(2000)</text>
+        <text x="0" y="52" fill="#334155">description TEXT</text>
+      </g>
+    </g>
+
+    <!-- GROUP_MEMBER TABLE -->
+    <g transform="translate(20, 420)">
+      <rect width="190" height="85" rx="8" fill="white" stroke="#06b6d4" stroke-width="2"/>
+      <rect width="190" height="30" rx="8" fill="#06b6d4"/>
+      <text x="95" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">group_member</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#0e7490" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#0e7490">group_id</text>
+        <rect x="0" y="28" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="37" fill="#0e7490">account_id</text>
+      </g>
+    </g>
+
+    <!-- INVITATION TABLE -->
+    <g transform="translate(230, 385)">
+      <rect width="190" height="120" rx="8" fill="white" stroke="#ec4899" stroke-width="2"/>
+      <rect width="190" height="30" rx="8" fill="#ec4899"/>
+      <text x="95" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">invitation</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#9d174d" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#9d174d">account_id</text><text x="85" y="23" fill="#64748b" font-size="9">(org)</text>
+        <text x="0" y="38" fill="#334155">data VARCHAR(250)</text><text x="130" y="38" fill="#22c55e" font-size="8">UQ</text>
+        <text x="0" y="52" fill="#334155">code VARCHAR(250)</text>
+        <text x="0" y="66" fill="#334155">isNewUser, as_admin</text>
+      </g>
+    </g>
+
+    <!-- Internal Relationships -->
+    <path d="M 210 175 L 230 175" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#crowsfoot-one)"/>
+    <path d="M 325 225 L 325 240" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+    <path d="M 210 355 L 115 355 L 115 310" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+    <path d="M 115 410 L 115 420" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+  </g>
+
+  <!-- LICENSE DOMAIN -->
+  <g transform="translate(490, 90)">
+    <rect width="380" height="520" rx="15" fill="url(#licenseDomain)" stroke="#ef4444" stroke-width="2" filter="url(#shadow)"/>
+    <text x="190" y="28" text-anchor="middle" fill="#991b1b" font-family="Arial" font-size="16" font-weight="bold">LICENSE DOMAIN</text>
+    <line x1="20" y1="40" x2="360" y2="40" stroke="#ef4444" stroke-width="1"/>
+
+    <!-- LICENSE TABLE -->
+    <g transform="translate(20, 55)">
+      <rect width="340" height="380" rx="8" fill="white" stroke="#dc2626" stroke-width="2"/>
+      <rect width="340" height="30" rx="8" fill="#dc2626"/>
+      <text x="170" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">license</text>
+      <text x="320" y="20" fill="#fecaca" font-family="Arial" font-size="9">CORE</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#991b1b" font-weight="bold">id</text><text x="30" y="9" fill="#64748b">INT AUTO_INCREMENT</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#991b1b">owner_id</text><text x="70" y="23" fill="#64748b">--> account</text>
+        <rect x="0" y="28" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="37" fill="#991b1b">product_id</text><text x="80" y="37" fill="#64748b">--> product</text>
+        <rect x="0" y="42" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="51" fill="#991b1b">scheme_id</text><text x="78" y="51" fill="#64748b">--> scheme</text>
+        <rect x="0" y="56" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="65" fill="#991b1b">link_id</text><text x="55" y="65" fill="#64748b">--> account_member</text>
+
+        <line x1="0" y1="75" x2="320" y2="75" stroke="#fecaca" stroke-width="1"/>
+        <text x="0" y="88" fill="#64748b" font-weight="bold">Limits:</text>
+        <text x="50" y="88" fill="#334155">seat_limit, user_seat_limit</text>
+        <text x="0" y="102" fill="#334155">node_limit, instance_limit</text>
+
+        <line x1="0" y1="112" x2="320" y2="112" stroke="#fecaca" stroke-width="1"/>
+        <rect x="0" y="120" width="320" height="36" fill="#fef2f2" rx="3"/>
+        <text x="4" y="133" fill="#991b1b" font-weight="bold">type TINYINT</text>
+        <text x="90" y="133" fill="#dc2626" font-size="9">0 = Named User | 1 = Floating</text>
+        <text x="4" y="149" fill="#991b1b" font-weight="bold">life_cycle TINYINT</text>
+        <text x="115" y="149" fill="#dc2626" font-size="9">0 = Time Limited | 1 = Perpetual</text>
+
+        <text x="0" y="170" fill="#334155">expiry_date DATETIME</text>
+        <text x="160" y="170" fill="#334155">support_until DATETIME</text>
+        <text x="0" y="184" fill="#334155">lease_duration INT</text><text x="120" y="184" fill="#64748b" font-size="9">(seconds)</text>
+        <text x="0" y="198" fill="#334155">features VARCHAR(1000)</text>
+        <text x="0" y="212" fill="#334155">watermark VARCHAR(100)</text>
+        <text x="160" y="212" fill="#334155">description</text>
+
+        <line x1="0" y1="222" x2="320" y2="222" stroke="#fecaca" stroke-width="1"/>
+        <text x="0" y="235" fill="#64748b" font-weight="bold">Assignment:</text>
+        <text x="0" y="249" fill="#334155">can_renewal, auto_renewal</text>
+        <rect x="0" y="256" width="320" height="16" fill="#fef2f2" rx="3"/>
+        <text x="4" y="268" fill="#991b1b" font-weight="bold">assignment_policy</text>
+        <text x="120" y="268" fill="#dc2626" font-size="9">0=owner 1=domains 2=emails 3=external</text>
+        <text x="0" y="286" fill="#334155">assignment_policy_data TEXT</text>
+        <text x="0" y="300" fill="#334155">automatic_assign, arbitrary_domain</text>
+
+        <line x1="0" y1="310" x2="320" y2="310" stroke="#fecaca" stroke-width="1"/>
+        <text x="0" y="323" fill="#334155">order_id, notif, notif_emails...</text>
+        <text x="0" y="337" fill="#64748b" font-style="italic">created_date DATETIME</text>
+      </g>
+    </g>
+
+    <!-- ASSIGNMENT TABLE -->
+    <g transform="translate(20, 450)">
+      <rect width="160" height="55" rx="8" fill="white" stroke="#f97316" stroke-width="2"/>
+      <rect width="160" height="26" rx="8" fill="#f97316"/>
+      <text x="80" y="18" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">assignment</text>
+      <g transform="translate(8, 32)" font-family="Consolas, monospace" font-size="9">
+        <rect x="0" y="0" width="8" height="8" fill="#fbbf24" rx="1"/><text x="12" y="7" fill="#9a3412">id</text>
+        <rect x="30" y="0" width="8" height="8" fill="#60a5fa" rx="1"/><text x="42" y="7" fill="#9a3412">license_id</text>
+        <rect x="100" y="0" width="8" height="8" fill="#60a5fa" rx="1"/><text x="112" y="7" fill="#9a3412">account_id</text>
+      </g>
+    </g>
+
+    <!-- Internal relationship -->
+    <path d="M 190 435 L 100 445" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+  </g>
+
+  <!-- PRODUCT DOMAIN -->
+  <g transform="translate(890, 90)">
+    <rect width="350" height="350" rx="15" fill="url(#productDomain)" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
+    <text x="175" y="28" text-anchor="middle" fill="#065f46" font-family="Arial" font-size="16" font-weight="bold">PRODUCT DOMAIN</text>
+    <line x1="20" y1="40" x2="330" y2="40" stroke="#10b981" stroke-width="1"/>
+
+    <!-- PRODUCT TABLE -->
+    <g transform="translate(20, 55)">
+      <rect width="150" height="120" rx="8" fill="white" stroke="#059669" stroke-width="2"/>
+      <rect width="150" height="30" rx="8" fill="#059669"/>
+      <text x="75" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="13" font-weight="bold">product</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#065f46" font-weight="bold">id</text>
+        <text x="0" y="24" fill="#334155">code</text><text x="40" y="24" fill="#22c55e" font-size="8">UNIQUE</text>
+        <text x="0" y="38" fill="#334155">name VARCHAR(25)</text>
+        <text x="0" y="52" fill="#334155">description</text>
+        <text x="0" y="66" fill="#334155">download_link</text>
+      </g>
+    </g>
+
+    <!-- PRODUCT_RELEASE TABLE -->
+    <g transform="translate(185, 55)">
+      <rect width="145" height="100" rx="8" fill="white" stroke="#059669" stroke-width="2"/>
+      <rect width="145" height="30" rx="8" fill="#059669"/>
+      <text x="72" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">product_release</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#065f46" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#065f46">product_id</text>
+        <text x="0" y="38" fill="#334155">name, description</text>
+        <text x="0" y="52" fill="#334155">start_date</text>
+      </g>
+    </g>
+
+    <!-- SCHEME TABLE -->
+    <g transform="translate(20, 190)">
+      <rect width="310" height="145" rx="8" fill="white" stroke="#6366f1" stroke-width="2"/>
+      <rect width="310" height="30" rx="8" fill="#6366f1"/>
+      <text x="155" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="13" font-weight="bold">scheme</text>
+      <text x="280" y="20" fill="#c7d2fe" font-family="Arial" font-size="9">Template</text>
+
+      <g transform="translate(8, 40)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#4338ca" font-weight="bold">id</text>
+        <rect x="60" y="0" width="10" height="10" fill="#60a5fa" rx="2"/><text x="74" y="9" fill="#4338ca">product_id</text>
+        <text x="150" y="9" fill="#334155">name VARCHAR(500)</text>
+
+        <text x="0" y="24" fill="#334155">description TEXT</text>
+        <text x="150" y="24" fill="#334155">seat_limit, user_seat_limit</text>
+        <text x="0" y="38" fill="#334155">node_limit, instance_limit</text>
+
+        <rect x="0" y="46" width="290" height="30" fill="#eef2ff" rx="3"/>
+        <text x="4" y="59" fill="#4338ca" font-weight="bold">type</text><text x="35" y="59" fill="#6366f1" font-size="9">0=named 1=floating</text>
+        <text x="150" y="59" fill="#4338ca" font-weight="bold">kind</text><text x="175" y="59" fill="#6366f1" font-size="9">0=Trial 1=Academic 2=Commercial</text>
+        <text x="4" y="73" fill="#4338ca" font-weight="bold">assignment_policy</text><text x="115" y="73" fill="#6366f1" font-size="9">validity INT (days)</text>
+
+        <text x="0" y="92" fill="#334155">features, can_renewal, text</text>
+      </g>
+    </g>
+
+    <!-- Internal relationships -->
+    <path d="M 170 115 L 185 115" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+    <path d="M 95 175 L 95 190" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+  </g>
+
+  <!-- USAGE TRACKING DOMAIN -->
+  <g transform="translate(890, 460)">
+    <rect width="350" height="250" rx="15" fill="url(#usageDomain)" stroke="#eab308" stroke-width="2" filter="url(#shadow)"/>
+    <text x="175" y="28" text-anchor="middle" fill="#713f12" font-family="Arial" font-size="16" font-weight="bold">USAGE TRACKING DOMAIN</text>
+    <line x1="20" y1="40" x2="330" y2="40" stroke="#eab308" stroke-width="1"/>
+
+    <!-- NODE TABLE -->
+    <g transform="translate(20, 55)">
+      <rect width="150" height="90" rx="8" fill="white" stroke="#a855f7" stroke-width="2"/>
+      <rect width="150" height="26" rx="8" fill="#a855f7"/>
+      <text x="75" y="18" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">node</text>
+
+      <g transform="translate(8, 34)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#7e22ce" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#7e22ce">license_id</text>
+        <rect x="0" y="28" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="37" fill="#7e22ce">account_id</text>
+        <text x="0" y="52" fill="#334155">machine TEXT</text>
+      </g>
+    </g>
+
+    <!-- SEAT TABLE -->
+    <g transform="translate(185, 55)">
+      <rect width="145" height="110" rx="8" fill="white" stroke="#14b8a6" stroke-width="2"/>
+      <rect width="145" height="26" rx="8" fill="#14b8a6"/>
+      <text x="72" y="18" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">seat</text>
+
+      <g transform="translate(8, 34)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#0f766e" font-weight="bold">id</text>
+        <rect x="0" y="14" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="23" fill="#0f766e">assignment_id</text>
+        <rect x="0" y="28" width="10" height="10" fill="#60a5fa" rx="2"/><text x="14" y="37" fill="#0f766e">node_id</text>
+        <text x="0" y="52" fill="#334155">lease_since</text>
+        <text x="0" y="66" fill="#334155">lease_until</text>
+      </g>
+    </g>
+
+    <!-- SESSION_STAT TABLE -->
+    <g transform="translate(20, 160)">
+      <rect width="310" height="75" rx="8" fill="white" stroke="#64748b" stroke-width="2"/>
+      <rect width="310" height="26" rx="8" fill="#64748b"/>
+      <text x="155" y="18" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">session_stat</text>
+
+      <g transform="translate(8, 34)" font-family="Consolas, monospace" font-size="10">
+        <rect x="0" y="0" width="10" height="10" fill="#fbbf24" rx="2"/><text x="14" y="9" fill="#374151">seat_id PK</text>
+        <rect x="80" y="0" width="10" height="10" fill="#60a5fa" rx="2"/><text x="94" y="9" fill="#374151">license_id</text>
+        <rect x="160" y="0" width="10" height="10" fill="#60a5fa" rx="2"/><text x="174" y="9" fill="#374151">account_id</text>
+        <rect x="240" y="0" width="10" height="10" fill="#60a5fa" rx="2"/><text x="254" y="9" fill="#374151">node_id</text>
+        <text x="0" y="24" fill="#334155">start_time, hb_time, end_time</text>
+      </g>
+    </g>
+
+    <!-- Internal relationships -->
+    <path d="M 170 100 L 185 100" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#crowsfoot-many)"/>
+  </g>
+
+  <!-- SUPPORTING TABLES -->
+  <g transform="translate(1260, 90)">
+    <rect width="220" height="620" rx="15" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2" filter="url(#shadow)"/>
+    <text x="110" y="28" text-anchor="middle" fill="#475569" font-family="Arial" font-size="14" font-weight="bold">SUPPORTING TABLES</text>
+    <line x1="20" y1="40" x2="200" y2="40" stroke="#94a3b8" stroke-width="1"/>
+
+    <!-- USER_LOCATION -->
+    <g transform="translate(15, 55)">
+      <rect width="190" height="90" rx="6" fill="white" stroke="#0ea5e9" stroke-width="1.5"/>
+      <rect width="190" height="24" rx="6" fill="#0ea5e9"/>
+      <text x="95" y="16" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">user_location</text>
+      <g transform="translate(6, 30)" font-family="Consolas, monospace" font-size="9">
+        <rect x="0" y="0" width="8" height="8" fill="#fbbf24" rx="1"/>
+        <rect x="0" y="0" width="8" height="8" fill="#60a5fa" rx="1" fill-opacity="0.5"/>
+        <text x="12" y="7" fill="#0369a1">identity_id PK/FK</text>
+        <text x="0" y="20" fill="#334155">first_country, first_city</text>
+        <text x="0" y="33" fill="#334155">last_country, last_city</text>
+        <text x="0" y="46" fill="#334155">first/last_product_id</text>
+      </g>
+    </g>
+
+    <!-- ARCHIVE -->
+    <g transform="translate(15, 160)">
+      <rect width="190" height="100" rx="6" fill="white" stroke="#78716c" stroke-width="1.5"/>
+      <rect width="190" height="24" rx="6" fill="#78716c"/>
+      <text x="95" y="16" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">archive</text>
+      <g transform="translate(6, 30)" font-family="Consolas, monospace" font-size="9">
+        <rect x="0" y="0" width="8" height="8" fill="#fbbf24" rx="1"/><text x="12" y="7" fill="#44403c">id</text>
+        <text x="0" y="20" fill="#334155">type (0=general, 1=seats)</text>
+        <text x="0" y="33" fill="#334155">license_id, account_id</text>
+        <text x="0" y="46" fill="#334155">start, end, email, machine</text>
+        <text x="0" y="59" fill="#334155">first_name, last_name, data</text>
+      </g>
+    </g>
+
+    <!-- ACCOUNT_SCHEME -->
+    <g transform="translate(15, 275)">
+      <rect width="190" height="70" rx="6" fill="white" stroke="#6366f1" stroke-width="1.5"/>
+      <rect width="190" height="24" rx="6" fill="#6366f1"/>
+      <text x="95" y="16" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">account_scheme</text>
+      <g transform="translate(6, 30)" font-family="Consolas, monospace" font-size="9">
+        <rect x="0" y="0" width="8" height="8" fill="#fbbf24" rx="1"/><text x="12" y="7" fill="#4338ca">id</text>
+        <rect x="40" y="0" width="8" height="8" fill="#60a5fa" rx="1"/><text x="52" y="7" fill="#4338ca">account_id</text>
+        <rect x="110" y="0" width="8" height="8" fill="#60a5fa" rx="1"/><text x="122" y="7" fill="#4338ca">scheme_id</text>
+      </g>
+    </g>
+
+    <!-- TOKENS -->
+    <g transform="translate(15, 360)">
+      <rect width="190" height="80" rx="6" fill="white" stroke="#64748b" stroke-width="1.5"/>
+      <rect width="190" height="24" rx="6" fill="#64748b"/>
+      <text x="95" y="16" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">tokens</text>
+      <g transform="translate(6, 30)" font-family="Consolas, monospace" font-size="9">
+        <rect x="0" y="0" width="8" height="8" fill="#fbbf24" rx="1"/><text x="12" y="7" fill="#374151">id</text>
+        <text x="0" y="20" fill="#334155">code VARCHAR(50)</text>
+        <text x="0" y="33" fill="#334155">member_id, used</text>
+        <text x="0" y="46" fill="#334155">extension_data TEXT</text>
+      </g>
+    </g>
+
+    <!-- CONFIG -->
+    <g transform="translate(15, 455)">
+      <rect width="190" height="65" rx="6" fill="white" stroke="#64748b" stroke-width="1.5"/>
+      <rect width="190" height="24" rx="6" fill="#64748b"/>
+      <text x="95" y="16" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">config</text>
+      <g transform="translate(6, 30)" font-family="Consolas, monospace" font-size="9">
+        <rect x="0" y="0" width="8" height="8" fill="#fbbf24" rx="1"/><text x="12" y="7" fill="#374151">@key VARCHAR(250) PK</text>
+        <text x="0" y="20" fill="#334155">value, description</text>
+      </g>
+    </g>
+
+    <!-- PASSWORD_RESETS -->
+    <g transform="translate(15, 535)">
+      <rect width="190" height="65" rx="6" fill="white" stroke="#64748b" stroke-width="1.5"/>
+      <rect width="190" height="24" rx="6" fill="#64748b"/>
+      <text x="95" y="16" text-anchor="middle" fill="white" font-family="Arial" font-size="11" font-weight="bold">password_resets</text>
+      <g transform="translate(6, 30)" font-family="Consolas, monospace" font-size="9">
+        <text x="0" y="7" fill="#334155">email VARCHAR(255)</text>
+        <text x="0" y="20" fill="#334155">token VARCHAR(255)</text>
+        <text x="0" y="33" fill="#64748b" font-style="italic">created_at TIMESTAMP</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== CROSS-DOMAIN RELATIONSHIPS ==================== -->
+  <!-- license -> account (owner) -->
+  <path d="M 490 260 C 430 260, 430 180, 470 180" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#crowsfoot-one)"/>
+  <text x="430" y="220" fill="#475569" font-family="Arial" font-size="9" transform="rotate(-90, 430, 220)">owner</text>
+
+  <!-- license -> product -->
+  <path d="M 870 200 L 910 200" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5,3" fill="none"/>
+
+  <!-- license -> scheme -->
+  <path d="M 870 260 C 880 260, 880 340, 910 340" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#crowsfoot-one)"/>
+
+  <!-- assignment -> license -->
+  <path d="M 620 540 L 620 520 L 680 520 L 680 475" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5,3" fill="none"/>
+
+  <!-- node <- license -->
+  <path d="M 870 380 C 920 380, 920 500, 910 550" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5,3" fill="none"/>
+
+  <!-- assignment -> seat (via assignment_id) -->
+  <path d="M 670 555 C 900 555, 1000 450, 1075 510" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#crowsfoot-many)"/>
+
+  <!-- ==================== LEGEND ==================== -->
+  <g transform="translate(30, 730)">
+    <rect width="1220" height="110" rx="10" fill="white" stroke="#cbd5e1" filter="url(#shadow)"/>
+
+    <!-- Legend Title -->
+    <rect width="1220" height="30" rx="10" fill="#475569"/>
+    <text x="610" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">LEGEND &amp; DATABASE STATISTICS</text>
+
+    <!-- Legend Items -->
+    <g transform="translate(20, 45)">
+      <rect x="0" y="0" width="14" height="14" fill="#fbbf24" rx="2"/><text x="20" y="11" font-family="Arial" font-size="11" fill="#334155">Primary Key (PK)</text>
+      <rect x="130" y="0" width="14" height="14" fill="#60a5fa" rx="2"/><text x="150" y="11" font-family="Arial" font-size="11" fill="#334155">Foreign Key (FK)</text>
+      <text x="260" y="11" font-family="Arial" font-size="11" fill="#22c55e" font-weight="bold">UQ</text><text x="280" y="11" font-family="Arial" font-size="11" fill="#334155">= Unique</text>
+
+      <line x1="350" y1="7" x2="400" y2="7" stroke="#475569" stroke-width="2" marker-end="url(#crowsfoot-one)"/>
+      <text x="410" y="11" font-family="Arial" font-size="11" fill="#334155">One-to-One</text>
+
+      <line x1="510" y1="7" x2="560" y2="7" stroke="#475569" stroke-width="2" marker-end="url(#crowsfoot-many)"/>
+      <text x="570" y="11" font-family="Arial" font-size="11" fill="#334155">One-to-Many</text>
+
+      <line x1="680" y1="7" x2="730" y2="7" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="740" y="11" font-family="Arial" font-size="11" fill="#334155">CASCADE DELETE</text>
+    </g>
+
+    <!-- Statistics -->
+    <g transform="translate(20, 75)">
+      <rect x="0" y="0" width="160" height="22" rx="4" fill="#dbeafe"/>
+      <text x="80" y="15" text-anchor="middle" font-family="Arial" font-size="11" fill="#1e40af">Tables: 18</text>
+
+      <rect x="180" y="0" width="160" height="22" rx="4" fill="#dcfce7"/>
+      <text x="260" y="15" text-anchor="middle" font-family="Arial" font-size="11" fill="#166534">FK Relationships: 22</text>
+
+      <rect x="360" y="0" width="180" height="22" rx="4" fill="#fee2e2"/>
+      <text x="450" y="15" text-anchor="middle" font-family="Arial" font-size="11" fill="#991b1b">Cascade Deletes: 18</text>
+
+      <rect x="560" y="0" width="140" height="22" rx="4" fill="#fef3c7"/>
+      <text x="630" y="15" text-anchor="middle" font-family="Arial" font-size="11" fill="#92400e">Engine: InnoDB</text>
+
+      <rect x="720" y="0" width="140" height="22" rx="4" fill="#f3e8ff"/>
+      <text x="790" y="15" text-anchor="middle" font-family="Arial" font-size="11" fill="#7c3aed">Charset: utf8mb4</text>
+
+      <rect x="880" y="0" width="160" height="22" rx="4" fill="#f1f5f9"/>
+      <text x="960" y="15" text-anchor="middle" font-family="Arial" font-size="11" fill="#475569">Collation: unicode_ci</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="900" y="870" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="12">License Management System - Database ERD | Generated 2025</text>
+
+</svg>

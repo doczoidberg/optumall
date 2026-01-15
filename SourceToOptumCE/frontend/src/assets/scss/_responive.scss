@@ -1,0 +1,128 @@
+/*
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+
+@media (min-width: 1281px) {
+
+  //CSS
+
+}
+
+/*
+    ##Device = Laptops, Desktops
+    ##Screen = B/w 1025px to 1280px
+  */
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+
+  //CSS
+
+}
+
+/*
+    ##Device = Tablets, Ipads (portrait)
+    ##Screen = B/w 768px to 1024px
+  */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  //CSS
+
+}
+
+/*
+    ##Device = Tablets, Ipads (landscape)
+    ##Screen = B/w 768px to 1024px
+  */
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+
+  //CSS
+
+}
+
+/*
+    ##Device = Low Resolution Tablets, Mobiles (Landscape)
+    ##Screen = B/w 481px to 767px
+  */
+
+@media (min-width: 320px) and (max-width: 767px) {
+
+  .navbar-custom-header{
+    .organization-name{
+        left: 200px;
+        top: 50%;
+        font-size: 20px;
+        width: 140px;
+        overflow: hidden;
+    }
+  }
+  //CSS
+  .login-page .login-panel {
+    width: 100%;
+    margin: 0 auto;
+  }
+  .navbar-top-links{
+    background: #272727;
+    li:last-child{
+      float: right;
+    }
+  }
+  .licenses-page {
+    .sort-left{
+      display: block;
+    }
+    .button-right{
+      margin-top: 20px;
+    }
+    .panel-default .panel-mini .pd-right-10{
+      padding-left: 0px;
+    }
+  }
+  .home-page{
+    .side-menu{
+     top: 100px;
+    }
+  }
+  .profile-page .tab-content .btn-edit-2{
+    width: 100%;
+    height: auto;
+  }
+  .popup-user-delete{
+    width: auto;
+  }
+  .navbar-custom-header .navbar-top-links .dropdown-alerts{
+    -webkit-transform: translateX(20%);
+    transform: translateX(20%);
+    left: 32px;
+  }
+  .navbar-custom-header .navbar-top-links .dropdown-alerts .tangle{
+    left: 12%;
+  }
+  .users-page .sort-left{
+    display: block;
+    // margin: 10px auto;
+  }
+  .content-search {
+    margin-left: auto !important;
+    margin: 20px 0px;
+    input{
+      float: left;
+    }
+  }
+
+  .sidebar-left-mb{
+     a{
+      margin-bottom: 5px;
+      text-decoration: underline;
+     }
+     .mini-text{
+      font-size: 11px;
+      color:$white;
+     }
+     .list-unstyled{
+      padding-left: 15px;
+     }
+  }
+}

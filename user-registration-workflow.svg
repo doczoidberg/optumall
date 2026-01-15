@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800" width="1200" height="1800">
+  <defs>
+    <style>
+      .title { font: bold 28px sans-serif; fill: #1a1a1a; }
+      .subtitle { font: bold 16px sans-serif; fill: #333; }
+      .label { font: 14px sans-serif; fill: #333; }
+      .small-text { font: 12px sans-serif; fill: #555; }
+      .box { fill: #ffffff; stroke: #2563eb; stroke-width: 2; }
+      .db-box { fill: #dbeafe; stroke: #1e40af; stroke-width: 2; }
+      .email-box { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .success-box { fill: #d1fae5; stroke: #059669; stroke-width: 2; }
+      .user-box { fill: #f3e8ff; stroke: #7c3aed; stroke-width: 2; }
+      .arrow { stroke: #2563eb; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-success { stroke: #059669; stroke-width: 2; fill: none; marker-end: url(#arrowhead-success); }
+      .circle { fill: #2563eb; }
+      .number-text { font: bold 14px sans-serif; fill: white; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#2563eb" />
+    </marker>
+    <marker id="arrowhead-success" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#059669" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="40" class="title" text-anchor="middle">User Registration Workflow - SourceToOptumCE</text>
+  <text x="600" y="65" class="subtitle" text-anchor="middle">(Laravel Lumen + MySQL)</text>
+
+  <!-- Step 1: User Registration Request -->
+  <circle class="circle" cx="60" cy="120" r="18"/>
+  <text x="60" y="125" class="number-text">1</text>
+  <rect x="100" y="100" width="400" height="140" rx="8" class="user-box"/>
+  <text x="300" y="125" class="subtitle" text-anchor="middle">User Submits Registration Form</text>
+  <text x="120" y="155" class="label">POST /api/auth/register</text>
+  <text x="120" y="180" class="small-text">{</text>
+  <text x="140" y="195" class="small-text">"email": "user@example.com",</text>
+  <text x="140" y="210" class="small-text">"password": "secure123",</text>
+  <text x="140" y="225" class="small-text">"first_name": "John", "last_name": "Doe",</text>
+  <text x="140" y="240" class="small-text">"account_name": "Acme Corp"</text>
+  <text x="120" y="255" class="small-text">}</text>
+
+  <!-- Arrow down -->
+  <path class="arrow" d="M 300 240 L 300 290"/>
+
+  <!-- Step 2: Validation -->
+  <circle class="circle" cx="60" cy="310" r="18"/>
+  <text x="60" y="315" class="number-text">2</text>
+  <rect x="100" y="290" width="400" height="100" rx="8" class="box"/>
+  <text x="300" y="315" class="subtitle" text-anchor="middle">Validation Layer</text>
+  <text x="120" y="340" class="small-text">✓ Email unique and valid format?</text>
+  <text x="120" y="360" class="small-text">✓ Password strength requirements met?</text>
+  <text x="120" y="380" class="small-text">✓ All required fields present?</text>
+
+  <!-- Arrow down -->
+  <path class="arrow" d="M 300 390 L 300 430"/>
+
+  <!-- Step 3: Database Transaction -->
+  <circle class="circle" cx="60" cy="450" r="18"/>
+  <text x="60" y="455" class="number-text">3</text>
+  <rect x="100" y="430" width="1000" height="500" rx="8" class="db-box"/>
+  <text x="600" y="455" class="subtitle" text-anchor="middle">Database Transaction (MySQL)</text>
+
+  <!-- 3.1 Identity Table -->
+  <rect x="140" y="480" width="420" height="100" rx="6" class="box"/>
+  <text x="350" y="505" class="label" text-anchor="middle">3.1 INSERT into identity</text>
+  <text x="160" y="530" class="small-text">• email: user@example.com</text>
+  <text x="160" y="548" class="small-text">• password: $2y$10$... (bcrypt hash)</text>
+  <text x="160" y="566" class="small-text">• first_name: John, last_name: Doe</text>
+  <text x="160" y="584" class="small-text">• email_verified: FALSE, status: 'pending'</text>
+
+  <!-- Arrow right -->
+  <path class="arrow" d="M 560 530 L 620 530"/>
+
+  <!-- Identity Result -->
+  <rect x="620" y="500" width="160" height="60" rx="6" class="success-box"/>
+  <text x="700" y="525" class="small-text" text-anchor="middle">identity_id:</text>
+  <text x="700" y="545" class="label" text-anchor="middle">123</text>
+
+  <!-- Arrow down from identity -->
+  <path class="arrow" d="M 350 580 L 350 620"/>
+
+  <!-- 3.2 Account Table -->
+  <rect x="140" y="620" width="420" height="80" rx="6" class="box"/>
+  <text x="350" y="645" class="label" text-anchor="middle">3.2 INSERT into account</text>
+  <text x="160" y="670" class="small-text">• name: "Acme Corp"</text>
+  <text x="160" y="688" class="small-text">• type: 'individual', status: 'active'</text>
+
+  <!-- Arrow right -->
+  <path class="arrow" d="M 560 660 L 620 660"/>
+
+  <!-- Account Result -->
+  <rect x="620" y="635" width="160" height="60" rx="6" class="success-box"/>
+  <text x="700" y="660" class="small-text" text-anchor="middle">account_id:</text>
+  <text x="700" y="680" class="label" text-anchor="middle">456</text>
+
+  <!-- Arrow down from account -->
+  <path class="arrow" d="M 350 700 L 350 740"/>
+
+  <!-- 3.3 Account Member Table -->
+  <rect x="140" y="740" width="420" height="80" rx="6" class="box"/>
+  <text x="350" y="765" class="label" text-anchor="middle">3.3 INSERT into account_member</text>
+  <text x="160" y="790" class="small-text">• account_id: 456, identity_id: 123</text>
+  <text x="160" y="808" class="small-text">• role: 'admin', status: 'active'</text>
+
+  <!-- Arrow right -->
+  <path class="arrow" d="M 560 780 L 620 780"/>
+
+  <!-- Member Result -->
+  <rect x="620" y="755" width="160" height="60" rx="6" class="success-box"/>
+  <text x="700" y="780" class="small-text" text-anchor="middle">member_id:</text>
+  <text x="700" y="800" class="label" text-anchor="middle">789</text>
+
+  <!-- Arrow down from member -->
+  <path class="arrow" d="M 350 820 L 350 860"/>
+
+  <!-- 3.4 VM Credits Table -->
+  <rect x="140" y="860" width="420" height="80" rx="6" class="box"/>
+  <text x="350" y="885" class="label" text-anchor="middle">3.4 INSERT into vm_credits</text>
+  <text x="160" y="910" class="small-text">• account_id: 456</text>
+  <text x="160" y="928" class="small-text">• credits: 0.00, credits_used: 0.00</text>
+
+  <!-- Arrow right -->
+  <path class="arrow" d="M 560 900 L 620 900"/>
+
+  <!-- Credits Result -->
+  <rect x="620" y="875" width="160" height="60" rx="6" class="success-box"/>
+  <text x="700" y="900" class="small-text" text-anchor="middle">credits_id:</text>
+  <text x="700" y="920" class="label" text-anchor="middle">101</text>
+
+  <!-- Database relationship diagram -->
+  <text x="850" y="505" class="subtitle">Relationships:</text>
+  <rect x="820" y="520" width="240" height="380" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+
+  <rect x="840" y="540" width="200" height="60" rx="4" fill="#e0e7ff" stroke="#6366f1" stroke-width="1"/>
+  <text x="940" y="560" class="small-text" text-anchor="middle" font-weight="bold">identity (123)</text>
+  <text x="940" y="580" class="small-text" text-anchor="middle">user@example.com</text>
+
+  <path stroke="#6366f1" stroke-width="2" fill="none" d="M 940 600 L 940 640"/>
+  <text x="960" y="625" class="small-text">links to</text>
+
+  <rect x="840" y="640" width="200" height="60" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="940" y="660" class="small-text" text-anchor="middle" font-weight="bold">account_member (789)</text>
+  <text x="940" y="680" class="small-text" text-anchor="middle">role: admin</text>
+
+  <path stroke="#f59e0b" stroke-width="2" fill="none" d="M 940 700 L 940 740"/>
+  <text x="960" y="725" class="small-text">links to</text>
+
+  <rect x="840" y="740" width="200" height="60" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="1"/>
+  <text x="940" y="760" class="small-text" text-anchor="middle" font-weight="bold">account (456)</text>
+  <text x="940" y="780" class="small-text" text-anchor="middle">Acme Corp</text>
+
+  <path stroke="#10b981" stroke-width="2" fill="none" d="M 940 800 L 940 840"/>
+  <text x="960" y="825" class="small-text">has</text>
+
+  <rect x="840" y="840" width="200" height="60" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="940" y="860" class="small-text" text-anchor="middle" font-weight="bold">vm_credits (101)</text>
+  <text x="940" y="880" class="small-text" text-anchor="middle">credits: 0.00</text>
+
+  <!-- Arrow down from DB transaction -->
+  <path class="arrow" d="M 600 930 L 600 970"/>
+
+  <!-- Step 4: Email Verification Token -->
+  <circle class="circle" cx="60" cy="990" r="18"/>
+  <text x="60" y="995" class="number-text">4</text>
+  <rect x="100" y="970" width="1000" height="80" rx="8" class="email-box"/>
+  <text x="600" y="995" class="subtitle" text-anchor="middle">Generate Email Verification Token</text>
+  <text x="120" y="1020" class="small-text">• Create UUID token: "abc123xyz456"</text>
+  <text x="120" y="1038" class="small-text">• Store in database with expiry (24 hours)</text>
+  <text x="700" y="1020" class="small-text">• Link token to identity_id: 123</text>
+
+  <!-- Arrow down -->
+  <path class="arrow" d="M 600 1050 L 600 1090"/>
+
+  <!-- Step 5: Send Email -->
+  <circle class="circle" cx="60" cy="1110" r="18"/>
+  <text x="60" y="1115" class="number-text">5</text>
+  <rect x="100" y="1090" width="1000" height="100" rx="8" class="email-box"/>
+  <text x="600" y="1115" class="subtitle" text-anchor="middle">Send Verification Email (SMTP)</text>
+  <text x="120" y="1140" class="small-text">To: user@example.com</text>
+  <text x="120" y="1158" class="small-text">Subject: Verify your email address</text>
+  <text x="120" y="1176" class="small-text">Body: Click here to verify: http://domain.com/verify?token=abc123xyz456</text>
+
+  <!-- Arrow down -->
+  <path class="arrow" d="M 600 1190 L 600 1230"/>
+
+  <!-- Step 6: Response to Client -->
+  <circle class="circle" cx="60" cy="1250" r="18"/>
+  <text x="60" y="1255" class="number-text">6</text>
+  <rect x="100" y="1230" width="1000" height="120" rx="8" class="success-box"/>
+  <text x="600" y="1255" class="subtitle" text-anchor="middle">Return Success Response to Client</text>
+  <text x="120" y="1280" class="small-text">{ "success": true, "message": "Registration successful. Please check your email.",</text>
+  <text x="120" y="1298" class="small-text">  "user": { "id": 123, "email": "user@example.com", "first_name": "John",</text>
+  <text x="120" y="1316" class="small-text">    "account": { "id": 456, "name": "Acme Corp", "role": "admin" } } }</text>
+  <text x="120" y="1334" class="label" font-weight="bold">Status: User created, awaiting email verification</text>
+
+  <!-- Arrow down -->
+  <path class="arrow" d="M 600 1350 L 600 1390"/>
+
+  <!-- Step 7: User Verifies Email -->
+  <circle class="circle" cx="60" cy="1410" r="18"/>
+  <text x="60" y="1415" class="number-text">7</text>
+  <rect x="100" y="1390" width="1000" height="100" rx="8" class="user-box"/>
+  <text x="600" y="1415" class="subtitle" text-anchor="middle">User Clicks Verification Link</text>
+  <text x="120" y="1440" class="label">GET /api/auth/verify?token=abc123xyz456</text>
+  <text x="120" y="1460" class="small-text">Backend validates token → Updates identity: email_verified = TRUE, status = 'active'</text>
+  <text x="120" y="1478" class="small-text">Response: "Email verified successfully. You can now login."</text>
+
+  <!-- Arrow down -->
+  <path class="arrow-success" d="M 600 1490 L 600 1530"/>
+
+  <!-- Step 8: User Login -->
+  <circle class="circle" cx="60" cy="1550" r="18"/>
+  <text x="60" y="1555" class="number-text">8</text>
+  <rect x="100" y="1530" width="1000" height="140" rx="8" class="success-box"/>
+  <text x="600" y="1555" class="subtitle" text-anchor="middle">User Logs In (Receives JWT Token)</text>
+  <text x="120" y="1580" class="label">POST /api/auth/login { "email": "user@example.com", "password": "secure123" }</text>
+  <text x="120" y="1605" class="small-text">Response: {</text>
+  <text x="140" y="1623" class="small-text">"token": "eyJhbGciOiJIUzI1NiIs...",</text>
+  <text x="140" y="1641" class="small-text">"user": { "id": 123, "accounts": [{ "account_id": 456, "role": "admin", "credits": 0.00 }] }</text>
+  <text x="120" y="1659" class="small-text">}</text>
+
+  <!-- Arrow down -->
+  <path class="arrow-success" d="M 600 1670 L 600 1710"/>
+
+  <!-- Step 9: Access OptumAdmin -->
+  <circle class="circle" cx="60" cy="1730" r="18"/>
+  <text x="60" y="1735" class="number-text">9</text>
+  <rect x="100" y="1710" width="1000" height="80" rx="8" class="user-box"/>
+  <text x="600" y="1735" class="subtitle" text-anchor="middle">User Can Now Access OptumAdmin Dashboard</text>
+  <text x="120" y="1760" class="small-text">✓ JWT token used for authentication</text>
+  <text x="120" y="1778" class="small-text">✓ Can view account details, manage VMs, purchase credits</text>
+  <text x="700" y="1760" class="small-text">✓ Multi-tenant ready</text>
+  <text x="700" y="1778" class="small-text">✓ Role-based permissions active</text>
+
+</svg>
