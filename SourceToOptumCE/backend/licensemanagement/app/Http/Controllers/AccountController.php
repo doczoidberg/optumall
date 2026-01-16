@@ -349,4 +349,54 @@ class AccountController extends Controller
         return response()->json('account removed successfully');
     }
 
+    /**
+     * Search accounts by name or ID (SuperAdmin only)
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function searchAccounts(Request $request)
+    {
+        try {
+            $current_user = Auth::user();
+
+            // Only superadmin can search all accounts
+            if ($current_user->role < 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied. SuperAdmin role required.'
+                ], 403);
+            }
+
+            $query = $request->input('q', '');
+
+            if (strlen($query) < 2) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Search query must be at least 2 characters.'
+                ], 400);
+            }
+
+            // Search by ID or name
+            $accounts = Account::where(function($q) use ($query) {
+                $q->where('id', 'LIKE', "%{$query}%")
+                  ->orWhere('name', 'LIKE', "%{$query}%");
+            })
+            ->limit(20)
+            ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $accounts
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error searching accounts: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error searching accounts.'
+            ], 500);
+        }
+    }
+
 }

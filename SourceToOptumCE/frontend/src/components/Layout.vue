@@ -70,6 +70,9 @@
                         <li>
                             <router-link to="/licenses"> <i class="fas fa-key fa-fw"></i><span>Licenses</span></router-link>
                         </li>
+                        <li>
+                            <router-link to="/tokens"> <i class="fa fa-coins fa-fw"></i><span>Optum Tokens</span></router-link>
+                        </li>
                         <li class="sidebar-left-mb show-mb hidden-md hidden-lg">
                             <ul class="list-unstyled">
                                 <slidebar-left></slidebar-left>

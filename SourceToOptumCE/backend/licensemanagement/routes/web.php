@@ -119,6 +119,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/credits/transactions[/{accountId}]', 'CreditsController@getTransactions');
         $router->post('/credits/checkout', 'CreditsController@createCheckoutSession');
         $router->post('/credits/add-manual', 'CreditsController@addCreditsManual'); // Superadmin only
+        $router->get('/credits/all-transactions', 'CreditsController@getAllTransactions'); // Superadmin only
+
+        // Admin endpoints
+        $router->get('/admin/accounts/search', 'AccountController@searchAccounts'); // Superadmin only
         // !Both
     });
 });

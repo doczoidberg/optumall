@@ -32,6 +32,8 @@ const router = new Router({
       redirect: 'homepage',
       children: [
         { path: 'licenses', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'MyLicenses', component: () => import('@/components/user/Licenses') },
+        { path: 'tokens', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'Tokens', component: () => import('@/components/user/Tokens') },
+        { path: 'tokens/success', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'TokensSuccess', component: () => import('@/components/user/Tokens') },
         { path: 'profile-update', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'ProfileEdit', component: () => import('@/components/admin/customer/UserEdit') },
         { path: 'profile', meta: { requiresAuth: true , adminAuth:false , residentAuth : true},name: 'MyProfile', component: () => import('@/components/user/Profile') }
       ]
@@ -62,17 +64,18 @@ router.beforeEach((to, from, next) => {
     // next();
     const authUser = JSON.parse(localStorage.getItem('user'))
     let isLogin = authUser && authUser.token;
-    let isNextToLogin = to.name === "Login"||to.name === "AdminLogin" 
+    let isNextToLogin = to.name === "Login"||to.name === "AdminLogin"
     if(isNextToLogin){
       if(isLogin) {
-        if(authUser.role === 'admin') {
+        // Role: 0=user, 1=admin, 2=superadmin
+        if(authUser.role >= 1) {
             next('/admin/licenses');
-        } 
+        }
         else {
             next('/licenses');
         }
-      } 
-      else { 
+      }
+      else {
         next()
       }
     }
@@ -82,19 +85,17 @@ router.beforeEach((to, from, next) => {
         }
         else if(to.meta.adminAuth) {
             const authUser = JSON.parse(localStorage.getItem('user'))
-            if(authUser.role === 'admin') {
+            // Allow admin (1) and superadmin (2)
+            if(authUser.role >= 1) {
                 next()
             }else {
                 next('/licenses')
             }
         } else if(to.meta.residentAuth) {
             const authUser = JSON.parse(localStorage.getItem('user'))
-            if(authUser.role === 'user') {
-                next()
-            }else {
-                console.log('Im in admin')
-                next('/admin/licenses')
-            }
+            // Allow all authenticated users to access user routes
+            // (admins/superadmins can view user pages too)
+            next()
         }
       } else {
         next()

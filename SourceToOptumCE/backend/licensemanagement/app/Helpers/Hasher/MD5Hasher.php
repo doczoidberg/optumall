@@ -39,6 +39,12 @@ class MD5Hasher implements Hasher
      */
     public function check($value, $hashedValue, array $options = [])
     {
+        // Support bcrypt hashes (starts with $2y$, $2a$, or $2b$)
+        if (preg_match('/^\$2[aby]\$/', $hashedValue)) {
+            return password_verify($value, $hashedValue);
+        }
+
+        // Default to MD5 for legacy passwords
         return $this->make($value, $options) === $hashedValue;
     }
 

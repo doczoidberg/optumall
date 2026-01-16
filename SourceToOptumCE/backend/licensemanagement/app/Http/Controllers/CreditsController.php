@@ -12,31 +12,31 @@ use Illuminate\Support\Facades\Log;
 
 class CreditsController extends Controller
 {
-    // Credit packages configuration
+    // Optum Tokens packages configuration
     private $packages = [
-        'starter' => [
-            'name' => 'Starter Pack',
-            'credits' => 100,
-            'price' => 10.00,
-            'currency' => 'USD'
+        'basic' => [
+            'id' => 'basic',
+            'name' => 'Token Package S',
+            'tokens' => 500,
+            'price' => 100.00,
+            'currency' => 'EUR',
+            'description' => '500 tokens for running Optum AI workloads'
         ],
-        'professional' => [
-            'name' => 'Professional Pack',
-            'credits' => 500,
-            'price' => 45.00,
-            'currency' => 'USD'
+        'standard' => [
+            'id' => 'standard',
+            'name' => 'Token Package M',
+            'tokens' => 3000,
+            'price' => 500.00,
+            'currency' => 'EUR',
+            'description' => '3000 tokens for running Optum AI workloads'
         ],
-        'enterprise' => [
-            'name' => 'Enterprise Pack',
-            'credits' => 1000,
-            'price' => 80.00,
-            'currency' => 'USD'
-        ],
-        'ultimate' => [
-            'name' => 'Ultimate Pack',
-            'credits' => 5000,
-            'price' => 350.00,
-            'currency' => 'USD'
+        'premium' => [
+            'id' => 'premium',
+            'name' => 'Token Package XL',
+            'tokens' => 20000,
+            'price' => 2500.00,
+            'currency' => 'EUR',
+            'description' => '20000 tokens for running Optum AI workloads'
         ]
     ];
 
@@ -67,21 +67,30 @@ class CreditsController extends Controller
             // Handle both API key (OptumAdmin) and JWT auth (License Management)
             $user = Auth::user();
 
+            Log::info('getBalance - User:', ['user' => $user ? $user->toArray() : null]);
+
             // If no accountId provided and user is authenticated, use user's account
             if (!$accountId && $user) {
                 $accountId = $user->account_id;
+                Log::info('getBalance - Using user account_id:', ['accountId' => $accountId]);
             }
 
             // If still no accountId, return error
             if (!$accountId) {
+                Log::warning('getBalance - No account ID available');
                 return response()->json([
                     'success' => false,
-                    'message' => 'Account ID required'
+                    'message' => 'Account ID required',
+                    'debug' => [
+                        'user_exists' => $user ? true : false,
+                        'user_account_id' => $user ? $user->account_id : null
+                    ]
                 ], 400);
             }
 
             // Check if user has access to this account (only if authenticated via JWT)
             if ($user && !$this->userCanAccessAccount($user, $accountId)) {
+                Log::warning('getBalance - Access denied', ['userId' => $user->id, 'accountId' => $accountId]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Access denied'
@@ -92,6 +101,7 @@ class CreditsController extends Controller
 
             if (!$credits) {
                 // Create initial credit record
+                Log::info('getBalance - Creating initial credit record for account:', ['accountId' => $accountId]);
                 $credits = AccountCredit::create([
                     'account_id' => $accountId,
                     'credits' => 0,
@@ -111,6 +121,7 @@ class CreditsController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching credits: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error fetching credit balance',
@@ -128,21 +139,31 @@ class CreditsController extends Controller
             // Handle both API key (OptumAdmin) and JWT auth (License Management)
             $user = Auth::user();
 
+            Log::info('getTransactions - User:', ['user' => $user]);
+            Log::info('getTransactions - AccountId param:', ['accountId' => $accountId]);
+
             // If no accountId provided and user is authenticated, use user's account
             if (!$accountId && $user) {
                 $accountId = $user->account_id;
+                Log::info('getTransactions - Using user account_id:', ['accountId' => $accountId]);
             }
 
             // If still no accountId, return error
             if (!$accountId) {
+                Log::warning('getTransactions - No account ID available');
                 return response()->json([
                     'success' => false,
-                    'message' => 'Account ID required'
+                    'message' => 'Account ID required',
+                    'debug' => [
+                        'user_exists' => $user ? true : false,
+                        'user_account_id' => $user ? $user->account_id : null
+                    ]
                 ], 400);
             }
 
             // Check if user has access to this account (only if authenticated via JWT)
             if ($user && !$this->userCanAccessAccount($user, $accountId)) {
+                Log::warning('getTransactions - Access denied', ['userId' => $user->id, 'accountId' => $accountId]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Access denied'
@@ -154,12 +175,15 @@ class CreditsController extends Controller
                 ->limit(50)
                 ->get();
 
+            Log::info('getTransactions - Found transactions:', ['count' => $transactions->count()]);
+
             return response()->json([
                 'success' => true,
                 'data' => $transactions
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching transactions: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error fetching transactions',
@@ -213,20 +237,20 @@ class CreditsController extends Controller
                         'currency' => strtolower($package['currency']),
                         'product_data' => [
                             'name' => $package['name'],
-                            'description' => $package['credits'] . ' Credits for ' . $account->name,
+                            'description' => $package['description'],
                         ],
                         'unit_amount' => $package['price'] * 100, // Convert to cents
                     ],
                     'quantity' => 1,
                 ]],
                 'mode' => 'payment',
-                'success_url' => env('APP_URL') . '/#/credits/success?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => env('APP_URL') . '/#/credits/cancel',
+                'success_url' => env('APP_URL') . '/#/tokens/success?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => env('APP_URL') . '/#/tokens',
                 'client_reference_id' => $accountId,
                 'metadata' => [
                     'account_id' => $accountId,
                     'package' => $packageKey,
-                    'credits' => $package['credits'],
+                    'tokens' => $package['tokens'],
                     'user_id' => $user->id
                 ]
             ]);
@@ -235,7 +259,7 @@ class CreditsController extends Controller
             $transaction = CreditTransaction::create([
                 'account_id' => $accountId,
                 'package_name' => $package['name'],
-                'credits' => $package['credits'],
+                'credits' => $package['tokens'],
                 'amount' => $package['price'],
                 'currency' => $package['currency'],
                 'status' => 'pending',
@@ -400,6 +424,79 @@ class CreditsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error adding credits',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all transactions across all accounts (superadmin only)
+     */
+    public function getAllTransactions(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            // Only superadmin can view all transactions
+            if ($user->role < 2) {
+                Log::warning('getAllTransactions - Access denied', ['userId' => $user->id, 'role' => $user->role]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied. SuperAdmin access required.'
+                ], 403);
+            }
+
+            // Optional filters
+            $limit = $request->input('limit', 100);
+            $status = $request->input('status'); // Filter by status (completed, pending, failed)
+            $accountId = $request->input('account_id'); // Filter by specific account
+
+            $query = CreditTransaction::with('account');
+
+            if ($status) {
+                $query->where('status', $status);
+            }
+
+            if ($accountId) {
+                $query->where('account_id', $accountId);
+            }
+
+            $transactions = $query->orderBy('created_date', 'desc')
+                ->limit($limit)
+                ->get();
+
+            // Add account name to each transaction
+            $transactionsWithAccount = $transactions->map(function ($transaction) {
+                return [
+                    'id' => $transaction->id,
+                    'account_id' => $transaction->account_id,
+                    'account_name' => $transaction->account ? $transaction->account->name : 'N/A',
+                    'package_name' => $transaction->package_name,
+                    'credits' => $transaction->credits,
+                    'amount' => $transaction->amount,
+                    'currency' => $transaction->currency,
+                    'status' => $transaction->status,
+                    'stripe_session_id' => $transaction->stripe_session_id,
+                    'stripe_payment_intent' => $transaction->stripe_payment_intent,
+                    'metadata' => $transaction->metadata,
+                    'created_date' => $transaction->created_date,
+                    'completed_date' => $transaction->completed_date
+                ];
+            });
+
+            Log::info('getAllTransactions - Returned transactions:', ['count' => $transactions->count()]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $transactionsWithAccount
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching all transactions: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching transactions',
                 'error' => $e->getMessage()
             ], 500);
         }
