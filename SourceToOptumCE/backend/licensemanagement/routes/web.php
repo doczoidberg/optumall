@@ -49,6 +49,28 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('credits/transactions/{accountId}', 'CreditsController@getTransactions');
     });
 
+    // Firebase User Sync API - Protected by API key for server-to-server communication
+    $router->group(['prefix' => 'firebase', 'middleware' => 'apikey'], function () use ($router) {
+        // Health and status endpoints
+        $router->get('health', 'FirebaseController@healthCheck');
+        $router->get('status', 'FirebaseController@status');
+
+        // Single user sync
+        $router->post('users/{id}', 'FirebaseController@syncUser');
+
+        // Batch user sync
+        $router->post('users/batch', 'FirebaseController@syncUsersBatch');
+
+        // Full sync (all users with pagination)
+        $router->post('users/full-sync', 'FirebaseController@fullSync');
+
+        // Sync users by account/organization
+        $router->post('users/by-account/{accountId}', 'FirebaseController@syncByAccount');
+
+        // Delete user from Firebase
+        $router->delete('users/{id}', 'FirebaseController@deleteUser');
+    });
+
     // Stripe webhook (no auth middleware)
     $router->post('stripe/webhook', 'CreditsController@stripeWebhook');
 

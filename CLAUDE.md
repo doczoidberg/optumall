@@ -130,7 +130,20 @@ php import_all.php
 - `GET /api/optumadmin/credits/balance/{accountId}` - Get credit balance
 - `GET /api/optumadmin/credits/transactions/{accountId}` - Get credit transactions
 
+**Firebase User Sync API (API Key Protected):**
+- `GET /api/firebase/health` - Check Firebase connection health
+- `GET /api/firebase/status` - Get sync status and statistics
+- `POST /api/firebase/users/{id}` - Sync single user to Firebase
+- `POST /api/firebase/users/batch` - Sync multiple users (body: `{"user_ids": [1,2,3]}`)
+- `POST /api/firebase/users/full-sync` - Full sync with pagination (query: `?limit=100&offset=0`)
+- `POST /api/firebase/users/by-account/{accountId}` - Sync all users of an account/organization
+- `DELETE /api/firebase/users/{id}` - Delete user from Firebase
+
 **API Key:** Set in `.env` as `OPTUMADMIN_API_KEY`
+
+**Firebase Configuration:** Set in `.env`:
+- `FIREBASE_FUNCTIONS_URL` - Firebase Cloud Functions base URL
+- `FIREBASE_API_KEY` - API key for Firebase authentication
 
 ## Projects Overview
 
