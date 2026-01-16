@@ -12,24 +12,43 @@ C:\optum\
 
 Each project has its own CLAUDE.md for project-specific guidance:
 - [optumadmin/optumadmin/CLAUDE.md](optumadmin/optumadmin/CLAUDE.md)
-- sourcetooptumce (needs CLAUDE.md creation)
+- [sourcetooptumce/CLAUDE.md](sourcetooptumce/CLAUDE.md)
 
-## IMPORTANT: PHP Development Server
+## IMPORTANT: Starting Development Servers
 
-### Starting the Backend Server
+### Starting Both Frontend and Backend
 
-**ALWAYS use background mode when starting PHP server:**
+**ALWAYS use background mode when starting servers:**
 
+**1. Start PHP Backend (Laravel Lumen API):**
 ```bash
-cd C:\optum\sourcetooptumce\backend\licensemanagement
+cd /c/optum/sourcetooptumce/backend/licensemanagement
 php -S localhost:8000 -t public 2>&1
-# Run this in background mode using run_in_background: true in Bash tool
+# Run in background mode using run_in_background: true in Bash tool
 ```
 
 **Server will output:**
 ```
-[Thu Jan 15 17:54:20 2026] PHP 7.4.33 Development Server (http://localhost:8000) started
+[Fri Jan 16 07:54:19 2026] PHP 7.4.33 Development Server (http://localhost:8000) started
 ```
+
+**2. Start Vue Frontend:**
+```bash
+cd /c/optum/sourcetooptumce/frontend
+npm run dev
+# Run in background mode using run_in_background: true in Bash tool
+```
+
+**Server will output:**
+```
+DONE  Compiled successfully in ~50s
+Your application is running here: http://localhost:8080
+```
+
+**IMPORTANT PATH NOTE:**
+- On Windows with Git Bash/WSL, use forward slash paths: `/c/optum/...`
+- Direct Windows paths like `C:\optum\...` will NOT work in bash commands
+- The script name is `npm run dev` (NOT `npm run serve`)
 
 ### Common Mistakes to Avoid
 
@@ -73,19 +92,28 @@ cd C:\optum\sourcetooptumce\backend\licensemanagement\database\migrations
 php import_all.php
 ```
 
-### Admin Account for Testing
+### Admin Accounts for Testing
 
-**SuperAdmin Account:**
-- Username: `daniel.zuidinga@googlemail.com`
+**SuperAdmin Accounts (role=2):**
+- Username: `info@seoaachen.de` (ID: 23761) - **USE THIS FOR TESTING**
+- Username: `liuchenglong@kulunsoft.com` (ID: 109)
+- Username: `zhangjun@kulunsoft.com` (ID: 110)
+
+**Admin Accounts (role=1):**
+- `mah@optumce.com` (ID: 29)
+- `jkr@optumce.com` (ID: 30)
+- `smh@optumce.com` (ID: 40)
+- `kk@optumce.com` (ID: 145)
+- `dth@optumce.com` (ID: 272)
+
+**Test Account (Normal User):**
+- Username: `daniel.zuidinga@googlemail.com` (ID: 23871, role=0)
 - Password: `test123`
-- Role: 2 (SuperAdmin)
-- Identity ID: 23871
-- Account ID: 55248
 
 **Role Levels:**
-- 0 = Normal User
-- 1 = Admin (organization admin via account_member.member_role)
-- 2 = SuperAdmin (global admin, sees all data)
+- 0 = Normal User (22,160 users)
+- 1 = Admin (10 users - organization admin via account_member.member_role)
+- 2 = SuperAdmin (3 users - global admin, sees all data)
 
 **Important:** The `getRoleAttribute()` in User model checks both `identity.role` AND `account_member.member_role`. SuperAdmin (role=2) is determined by `identity.role` field only.
 
