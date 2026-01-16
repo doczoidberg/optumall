@@ -7,6 +7,7 @@ import { users } from './users.module';
 import { groups } from './groups.module';
 import { licenses } from './licenses.module';
 import { products } from './products.module';
+import { credits } from './credits.module';
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ export const store = new Vuex.Store({
         users,
         groups,
         licenses,
-        products
+        products,
+        credits
     }
 });

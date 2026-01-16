@@ -70,6 +70,9 @@
                         <li>
                             <router-link to="/licenses"> <i class="fas fa-key fa-fw"></i><span>Licenses</span></router-link>
                         </li>
+                        <li>
+                            <router-link to="/credits"> <i class="fa fa-credit-card fa-fw"></i><span>Buy Credits</span></router-link>
+                        </li>
                         <li class="sidebar-left-mb show-mb hidden-md hidden-lg">
                             <ul class="list-unstyled">
                                 <slidebar-left></slidebar-left>

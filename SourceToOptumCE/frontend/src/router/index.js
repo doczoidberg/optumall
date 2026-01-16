@@ -23,7 +23,8 @@ const router = new Router({
         { path: 'user/detail/:id',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'UserDetail', component: () => import('@/components/admin/customer/UserDetail') },
         { path: 'group',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'Group', component: () => import('@/components/admin/customer/Group') },
         { path: 'group/grid',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'GroupGrid', component: () => import('@/components/admin/customer/GroupGrid') },
-        { path: 'reporting',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'Report', component: () => import('@/components/admin/Report') }
+        { path: 'reporting',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'Report', component: () => import('@/components/admin/Report') },
+        { path: 'credits', meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'AdminCredits', component: () => import('@/components/pages/Credits') }
       ]
     },
     { path: '/',
@@ -33,7 +34,8 @@ const router = new Router({
       children: [
         { path: 'licenses', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'MyLicenses', component: () => import('@/components/user/Licenses') },
         { path: 'profile-update', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'ProfileEdit', component: () => import('@/components/admin/customer/UserEdit') },
-        { path: 'profile', meta: { requiresAuth: true , adminAuth:false , residentAuth : true},name: 'MyProfile', component: () => import('@/components/user/Profile') }
+        { path: 'profile', meta: { requiresAuth: true , adminAuth:false , residentAuth : true},name: 'MyProfile', component: () => import('@/components/user/Profile') },
+        { path: 'credits', meta: { requiresAuth: true , adminAuth:false , residentAuth : true}, name: 'UserCredits', component: () => import('@/components/pages/Credits') }
       ]
     },
     { path: '/homepage', name: 'Homepage', component: () => import('@/components/user/Homepage') },

@@ -125,6 +125,9 @@
                             <li>
                                 <router-link to="/admin/reporting">  <i class="fa fa-bar-chart-o fa-fw"></i><span>Reporting</span></router-link>
                             </li>
+                            <li>
+                                <router-link to="/admin/credits">  <i class="fa fa-credit-card fa-fw"></i><span>Buy Credits</span></router-link>
+                            </li>
                             <li class="sidebar-left-mb show-mb hidden-md hidden-lg">
                                <ul  class="list-unstyled">
                                  <slidebar-left></slidebar-left>
