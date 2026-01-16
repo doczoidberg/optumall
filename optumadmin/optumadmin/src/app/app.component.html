@@ -1,0 +1,93 @@
+<!-- sidenav -->
+<mat-sidenav-container fu2llscreen class="example-container" color="primary">
+  <!--mobile sidebar -->
+  <mat-sidenav #sidenav mode="side" fixedInViewport="true" [(opened)]="opened" color="primary">
+    <!-- user -->
+    <div>
+      <button mat-button routerLink="/dashboard" (click)="opened = false" routerLinkActive="active"><i
+          class="fas fa-lg fa-list"></i> <span> Dashboard</span></button><br>
+      <button mat-button routerLink="/customers" (click)="opened = false" routerLinkActive="active"><i
+          class="fas fa-lg fa-list"></i> <span> Customers/Credits</span></button><br>
+      <button mat-button routerLink="/accounts" (click)="opened = false" routerLinkActive="active"><i
+          class="fas fa-lg fa-users"></i> <span> Accounts</span></button><br>
+      <button mat-button routerLink="/usage" (click)="opened = false" routerLinkActive="active"><i
+          class="fas fa-lg fa-list"></i> <span> Usage</span></button><br>
+      <button mat-button routerLink="/logs" (click)="opened = false" routerLinkActive="active"><i
+          class="fas fa-lg fa-list"></i> <span> Logs</span></button><br>
+      <button *ngIf="isAdmin" mat-button routerLink="/admin/users" (click)="opened = false" routerLinkActive="active"><i
+          class="fas fa-lg fa-user-shield"></i> <span> Admin Users</span></button><br>
+      <a mat-button href="/assets/docs/index.html" target="_blank"><i
+          class="fas fa-lg fa-book"></i> <span> API Docs</span></a><br>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content style="min-height:100vh">
+    <!-- main toolbar -->
+    <mat-toolbar color="primary" class="mat-elevation-z2">
+      <div [hidden]="!user">
+        <button mat-button (click)="opened = !opened" fxShow.gt-sm="false">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <span style="margin-right:20px;">Optum Admin</span>
+      <nav fxShow.lt-md="false">
+        <div [hidden]="!user">
+          <!-- user -->
+          <button mat-button routerLink="/dashboard" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-list"></i> <span> Dashboard</span></button>
+          <button mat-button routerLink="/customers" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-list"></i> <span> Customers/Credits</span></button>
+          <button mat-button routerLink="/accounts" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-users"></i> <span> Accounts</span></button>
+          <button mat-button routerLink="/vms" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-list"></i> <span> VMs</span></button>
+          <button mat-button routerLink="/usage" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-list"></i> <span> Usage</span></button>
+          <button mat-button routerLink="/logs" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-list"></i> <span> Logs</span></button>
+          <button *ngIf="isAdmin" mat-button routerLink="/admin/users" (click)="opened = false" routerLinkActive="active"><i
+              class="fas fa-lg fa-user-shield"></i> <span> Admin Users</span></button>
+          <a mat-button href="/assets/docs/index.html" target="_blank"><i
+              class="fas fa-lg fa-book"></i> <span> API Docs</span></a>
+
+        </div>
+      </nav>
+
+      <span class="example-fill-remaining-space"></span>
+
+      <div fxFlex fxLayoutAlign="flex-end center">
+        <!-- <a href="#" mat-button>Align right</a> -->
+        <div [hidden]="!user">
+
+          <button mat-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+            <!-- <span style="font-size:10px;position:absolute;top:14px;">({{role}})</span>  -->
+            <span fxShow.lt-sm="false">{{user?.email }}</span>
+            <span class="user-role" *ngIf="role">({{ role }})</span>
+            <mat-icon>account_circle</mat-icon><br>
+          </button>
+
+          <mat-menu #menu="matMenu" xPosition="before">
+            <button mat-menu-item (click)=" router.navigate(['/test'])">
+              <mat-icon></mat-icon> <span>Testrunner</span>
+            </button>
+            <button mat-menu-item (click)=" router.navigate(['/settings'])">
+              <mat-icon>settings</mat-icon> <span>Settings</span>
+            </button>
+
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+
+    </mat-toolbar>
+
+    <!-- router forms -->
+    <!-- <main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"> -->
+    <main>
+      <router-outlet #o="outlet"></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

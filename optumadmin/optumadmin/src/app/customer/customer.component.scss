@@ -1,0 +1,100 @@
+.gap10 {
+  height: 10px;
+}
+
+
+
+//////// Eingabeformular Projket Material Overrides
+:host ::ng-deep .mat-form-field-infix {
+  display: block;
+  position: relative;
+  flex: auto;
+  padding: 0 !important;
+  border-top: 0px solid transparent !important;
+}
+
+
+:host ::ng-deep .mat-form-field-wrapper {
+  margin-bottom: -1.25em;
+}
+
+:host ::ng-deep .txtZiele {
+  margin-top: 9px !important;
+  min-width: 650px !important;
+}
+
+:host ::ng-deep .txtDauer {
+  margin-top: 9px !important;
+  width: 50px !important;
+}
+
+:host ::ng-deep .datStart {
+  width: 120px !important;
+}
+
+:host ::ng-deep .datZiel {
+  width: 120px !important;
+}
+
+//////// Eingabeformular Projket Material Overrides Ende
+
+.package-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #ffffff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.package-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.package-description {
+  min-height: 48px;
+  margin-bottom: 8px;
+  color: #555555;
+}
+
+.package-tokens {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.package-price {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.package-card button {
+  align-self: flex-start;
+}
+
+.package-hint {
+  font-size: 12px;
+  color: #666666;
+  margin-top: 8px;
+}
+
+.payment-error {
+  color: #e74c3c;
+  margin-bottom: 12px;
+}
+
+.payment-test-url {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #666666;
+}
+
+.payment-test-url a {
+  margin-left: 4px;
+}

@@ -1,0 +1,52 @@
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+  <mat-card style="max-width: 400px; width: 100%; padding: 20px;">
+    <mat-card-header>
+      <mat-card-title>OptumAdmin Login</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form #loginForm="ngForm" (ngSubmit)="loginWithEmail(email.value, password.value)">
+        <mat-form-field appearance="outline" style="width: 100%; margin-top: 20px;">
+          <mat-label>Email</mat-label>
+          <input matInput
+                 type="email"
+                 #email
+                 name="email"
+                 required
+                 placeholder="your@email.com">
+          <mat-icon matPrefix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px;">
+          <mat-label>Password</mat-label>
+          <input matInput
+                 [type]="hidePassword ? 'password' : 'text'"
+                 #password
+                 name="password"
+                 required
+                 placeholder="Password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="hidePassword = !hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" style="color: red; margin: 10px 0; font-size: 14px;">
+          {{ errorMessage }}
+        </div>
+
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="loading"
+                style="width: 100%; margin-top: 20px; height: 48px;">
+          <span *ngIf="!loading">Login</span>
+          <span *ngIf="loading">Logging in...</span>
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

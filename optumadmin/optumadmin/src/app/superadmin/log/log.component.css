@@ -1,0 +1,54 @@
+/* table {
+  width: 100%;
+} */
+.mat-column-datetime {
+  flex: 0 0 180px !important;
+}
+.mat-column-message {
+  flex: 0 0 500px !important;
+  /* min-width: 300px; */
+}
+.mat-column-source {
+  flex: 0 0 80px !important;
+}
+.mat-column-level {
+  flex: 0 0 100px !important;
+}
+.mat-column-meta {
+  flex: 0 0 100px !important;
+}
+
+.mat-small {
+  height: 30px;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 0 11px;
+  min-width: 1px;
+}
+
+/deep/ .mat-menu-panel {
+  max-width: 1000px !important;
+}
+
+pre span {
+  white-space: normal;
+}
+.string {
+  color: green;
+}
+.number {
+  color: darkorange;
+}
+.boolean {
+  color: blue;
+}
+.null {
+  color: magenta;
+}
+.key {
+  color: red;
+}
+
+/deep/ pre {
+  outline: 0px !important;
+}

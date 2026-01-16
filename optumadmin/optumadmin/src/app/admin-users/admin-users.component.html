@@ -1,0 +1,84 @@
+<div class="admin-users-container">
+  <mat-card class="admin-users-card">
+    <h2>Admin User Management</h2>
+    <form class="add-user-form" (ngSubmit)="addOrUpdateUser()">
+      <mat-form-field appearance="outline">
+        <mat-label>Email address</mat-label>
+        <input matInput type="email" [formControl]="addEmailControl" placeholder="user@example.com">
+        <mat-error *ngIf="addEmailControl.hasError('required')">Email is required</mat-error>
+        <mat-error *ngIf="addEmailControl.hasError('email')">Enter a valid email</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select [formControl]="addRoleControl">
+          <mat-option *ngFor="let role of roles" [value]="role">
+            {{ role | titlecase }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="addRoleControl.hasError('required')">Role is required</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Add / Update' }}
+      </button>
+    </form>
+  </mat-card>
+
+  <mat-card class="admin-users-card">
+    <h3>Current users</h3>
+    <div class="table-wrapper" *ngIf="!(loading && !dataSource.data.length); else tableLoading">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Role</th>
+          <td mat-cell *matCellDef="let user">
+            <mat-form-field appearance="outline" class="role-select">
+              <mat-select [value]="user.role" (selectionChange)="changeRole(user, $event.value)">
+                <mat-option *ngFor="let role of roles" [value]="role">
+                  {{ role | titlecase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let user">
+            <button mat-icon-button color="warn" (click)="removeUser(user)"
+              [disabled]="user.email === 'info@seoaachen.de' || user.email === currentUserEmail">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <p class="empty-state" *ngIf="!dataSource.data.length">No admin users added yet.</p>
+    </div>
+    <div class="invite-link" *ngIf="lastInviteLink">
+      <h4>Invite link generated for {{ lastInviteEmail }}</h4>
+      <p>
+        Share this link with the user so they can set a password:
+      </p>
+      <mat-form-field appearance="outline" class="invite-link-field">
+        <input matInput [value]="lastInviteLink" readonly>
+        <button mat-icon-button matSuffix (click)="copyInviteLink()">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </mat-card>
+</div>
+
+<ng-template #tableLoading>
+  <div class="table-loading">
+    Loading users…
+  </div>
+</ng-template>

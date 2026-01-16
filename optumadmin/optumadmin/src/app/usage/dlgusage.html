@@ -1,0 +1,93 @@
+<style>
+  .dlginput {
+    margin-right: 20px;
+  }
+</style>
+
+<form class="example-form">
+  <table class="userdialogtable" cellspacing="0">
+    <tr>
+      <td>
+        <mat-form-field class="dlginput">
+          <input matInput [ngModelOptions]="{standalone: true}" type="email" placeholder="E-mail" #txtmailregister2
+            [(ngModel)]="txtmailregister" />
+        </mat-form-field>
+      </td>
+
+      <td>
+        <mat-form-field class="dlginput">
+          <input matInput [ngModelOptions]="{standalone: true}" [hidden]="txtid" type="password" placeholder="Password"
+            #txtpassregister2 [(ngModel)]="txtpassregister" />
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-form-field class="dlginput">
+          <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Name" #txtname2
+            [(ngModel)]="txtname" />
+        </mat-form-field>
+      </td>
+
+      <td>
+        <!-- <mat-form-field class="dlginput">
+                    <input matInput type="text" placeholder="Typ" #txtrollen>
+                </mat-form-field> -->
+        <mat-form-field style="">
+          <!-- <mat-label>Level</mat-label> -->
+          <mat-select placeholder="" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+            <mat-option value="Superadmin">Superadmin</mat-option>
+            <mat-option value="Admin">Admin</mat-option>
+            <mat-option value="Mitarbeiter">Mitarbeiter</mat-option>
+            <mat-option value="Kunde">Kunde</mat-option>
+            <!-- <mat-option value="days"</mat-option>  -->
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+
+      <td colspan="2">
+        <span class="einstellungenlabel">Gruppen:</span>
+        <mat-form-field class="example-chip-list" style="width: 100%;">
+          <mat-chip-grid #chipList>
+            <mat-chip-row *ngFor="let fruit of fruits" [removable]="removable"
+              (removed)="remove(fruit)">
+              {{fruit.name}}
+              <button matChipRemove *ngIf="removable">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            <input #fruitInput [formControl]="fruitCtrl" [matAutocomplete]="auto"
+              [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event)">
+          </mat-chip-grid>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+              {{fruit}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        {{txtgruppen}}
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <mat-form-field class="dlginput" style="width: 100%;display:none;"
+          hintLabel="IDs kommagetrennt, wenn leer Zugriff auf alle Automaten">
+          <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Automaten" #txtautomaten2
+            [(ngModel)]="txtautomaten" />
+        </mat-form-field>
+
+        <mat-checkbox [ngModelOptions]="{standalone: true}" type="checkbox" #chkabrechnung2 [(ngModel)]="chkabrechnung">
+          Abrechnung einsehbar</mat-checkbox>
+
+      </td>
+    </tr>
+  </table>
+
+  <hr />
+  <button type="button" color="" mat-raised-button>abbrechen</button>
+  <button type="submit" color="warn" mat-raised-button>speichern</button>
+</form>

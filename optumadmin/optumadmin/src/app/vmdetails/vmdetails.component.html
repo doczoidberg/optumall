@@ -1,0 +1,97 @@
+<div *ngIf="createVM || editVM"
+    style="position: absolute;z-index:11;width:100%; height:100%; background-color:rgba(37, 37, 37, 0.623);overflow:hidden;">
+</div>
+
+
+
+<!-- master view   -->
+<div class="container" style="padding: 10px;">
+    <mat-card>
+        <h2 style="float:left">VM Details</h2>
+
+        <!-- <div style="clear:both;"></div>
+        <div class="row">
+
+            <div class="col-md-4 coldash1">
+                <div style="font-size:22px;">
+                    <div>{{vms?.length}} VMs</div>
+                </div>
+            </div>
+            <div class="col-md-4 coldash2">
+
+                <div style="font-size:22px;">Running:
+                  </div>
+
+            </div>
+            <div class="col-md-4 coldash3">
+                <div style="font-size:22px;">Terminated:
+                </div>
+            </div>
+
+
+        </div> -->
+        <!-- </mat-card>
+
+    <div class="gap10"></div>
+
+    <mat-card> -->
+
+        <!-- <table class="table table-alternate table-hover">
+            <thead>
+                <tr>
+                    <th>VM Name</th>
+                    <th>State</th>
+                    <th>Credits</th>
+                    <th>Credits Used</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody *ngIf="vms">
+                <tr *ngFor="let p of vms">
+                    <td>{{p.name}}</td>
+                    <td style="font-weight: bold;">{{p.metadata.status}}</td>
+                     <td style="font-weight: bold;">{{p.metadata.machineType}}</td>
+                    <td><a [routerLink]="'/customer'" [queryParams]="{id: p.id}"
+                            class="btn btn-outline-secondary btn-sm ">details</a></td>
+                    <td style="color:gray;">{{p.notes}}</td>
+                    <td>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table> -->
+
+        <table class="table table-alternate table-hover">
+
+            <thead>
+                <tr>
+                    <th>VM IP</th>
+                    <th>Date</th>
+                    <th>message</th>
+
+                </tr>
+            </thead>
+            <tbody *ngIf="machinelog">
+                <tr *ngFor="let p of machinelog">
+                    <!-- <td><a [routerLink]="'/kunde/'+ p.Kunde">{{p.DashBoard?.Kunde}}</a></td> -->
+                    <td>{{p.machinename}}</td>
+                    <!-- <td style="font-weight: bold;">{{p.ip6}}</td> -->
+                    <td>
+                        {{p.localdatetime|date:'short'}}
+
+                    </td>
+                    <td>
+                        {{p.message}}
+
+                    </td>
+
+
+
+
+                </tr>
+            </tbody>
+        </table>
+
+    </mat-card>
+</div>

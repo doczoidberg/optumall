@@ -1,0 +1,183 @@
+<div *ngIf="createEntry"
+  style="position: absolute;z-index:11;width:100%; height:100%; background-color:rgba(37, 37, 37, 0.623);overflow:hidden;">
+</div>
+
+<!-- neu/bearbeiten -->
+<div style=" left:0;  right:0;top:240px;  margin-left: auto;  margin-right: auto;  position: absolute;  width: 40%;">
+  <mat-card style="position:absolute; z-index:111;margin: auto;width:400px;    left: 50%;
+    transform: translateX(-50%);" *ngIf="createEntry">
+    <div style="position:absolute;right:10px; top:10px" (click)="createEntry=false"><i style="cursor:pointer;"
+        class="fas fa-times"></i>
+    </div>
+
+    <div class="row>">
+      <h3>Logs</h3>
+      <form class="col-md-12" #f (submit)="submitEntry(f, newentry)">
+
+
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label for="txtname">Projekt</label>
+              <select *ngIf="projects" class="form-control" name="txtname" [(ngModel)]="newentry.projectid">
+                <option *ngFor="let p of projects" [value]="p.id">{{p.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="txttext">Beschreibung</label>
+              <input type="text" class="form-control" name="txttext" required [(ngModel)]="newentry.text">
+            </div>
+
+            <!-- <div class="form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                      </div> -->
+
+            <div class="row">
+
+              <div class="form-group col-md-6">
+                <label for="txtamount">Betrag inkl. Mwst.</label>
+                <input type="number" class="form-control" name="txtamount" [(ngModel)]="newentry.amount">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="txtbudget">Mwst.</label>
+                <input type="number" class="form-control" name="txtbudget" required [(ngModel)]="newentry.amounttax">
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- <div class="input-group">
+                              <input type="text" class="form-control" id="validationTooltipUsername" name="txtnotes" [(ngModel)]="newentry.notes"
+                                  placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                              <div class="input-group-apppend">
+                                  <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                              </div>
+                              <div class="invalid-tooltip">
+                                  Please choose a unique and valid username.
+                              </div>
+                          </div> -->
+
+          <!-- <div class="form-check">
+                                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                  </div> -->
+
+
+        </div>
+
+
+        <div style="clear:both"></div>
+        <div class="row">
+
+          <hr>
+          <div style="float:right">
+            <button class="btn btn-default" (click)="createEntry=false">abbrechen</button>
+            <button type="submit" class="btn btn-primary">Buchung hinzufügen</button>
+          </div>
+        </div>
+      </form>
+
+
+    </div>
+  </mat-card>
+</div>
+
+
+<!-- header -->
+<div class="container" style="padding: 10px;">
+  <mat-card>
+    <h2 style="float:left">Logs</h2>
+    <!-- <button style="float:right;" type="button" mat-raised-button color="primary" (click)="createEntry= true">Neue
+      Buchung anlegen</button> -->
+
+    <div style="clear:both;"></div>
+    Filter
+    <div class="row">
+
+      <div class="col-md-3">
+        <div class="">
+          <label for="">start date</label>
+          <input type="text" placeholder="" class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true }">
+        </div>
+
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="">end date</label>
+          <input type="text" placeholder="" class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true }" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="txtname">Type</label>
+          <!-- <select *ngIf="projects" class="form-control" name="txtname" [(ngModel)]="filterproject" (change)="filter()">
+            <option value="alle">all</option>
+            <option *ngFor="let p of projects" [value]="p.id">{{p.name}}</option>
+          </select> -->
+        </div>
+      </div>
+      <div class="col-md-3">
+
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-md-2 coldash1">
+
+        <!-- <div>Budget: 200,000.00 €</div>
+        <div>Sum Spend: 50,025.00 €</div>
+        <div>Creditors: 50,025.00 €</div> -->
+        <div style="font-size:22px;">
+
+        </div>
+      </div>
+      <div class="col-md-2 coldash2">
+
+
+      </div>
+      <div class="col-md-2 coldash3">
+      </div>
+
+
+    </div>
+  </mat-card>
+
+
+  <div class="gap10"></div>
+  <mat-card>
+    <table class="table table-alternate table-hover">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Message</th>
+          <th>IP</th>
+          <th>Meta</th>
+          <th>CustomerID</th>
+          <!-- <th>Mwst.</th> -->
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr *ngFor="let p of logs">
+          <td>{{p.datetime | date:'short'}}</td>
+          <td>{{p.message}}</td>
+          <td>{{p.machinename}}</td>
+          <td>{{p.customerid}}</td>
+          <!-- <td>{{p.amounttax}} €</td> -->
+          <td>
+
+            <!-- <pre style="font-size:10px">{{p.meta |json}}</pre> -->
+            <json-editor *ngIf="(p.meta | json) != '{}' && p.meta" [options]="options" [data]="p.meta"></json-editor>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+
+
+  </mat-card>
+</div>

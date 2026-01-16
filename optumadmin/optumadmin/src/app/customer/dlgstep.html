@@ -1,0 +1,167 @@
+<h2>Schritt</h2>
+
+
+
+<style>
+  .dlginput {
+    width: 95%;
+  }
+</style>
+
+<form class="example-form">
+
+
+  <div class="row">
+    <div class="col-md-12">
+      <mat-form-field class="dlginput" style="width:100%">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Schritt" #txtmailregister2
+          [(ngModel)]="txtmailregister" />
+      </mat-form-field>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <mat-form-field style="width:90%">
+        <!-- <mat-label>Level</mat-label> -->
+        <mat-select placeholder="LZ" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+          <mat-option value="Superadmin">LZ1</mat-option>
+          <mat-option value="Admin">LZ2</mat-option>
+          <mat-option value="Mitarbeiter">LZ3</mat-option>
+          <mat-option value="Kunde">LZ4</mat-option>
+          <mat-option value="Kunde">LZ5</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <div class="col-md-2">
+      <mat-form-field style="width:90%">
+        <mat-label>Status</mat-label>
+        <mat-select placeholder="Status" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+          <mat-option value="Superadmin">act</mat-option>
+          <mat-option value="Admin">wait</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <div class="col-md-2">
+      <mat-form-field style="width:90%">
+        <!-- <mat-label>Level</mat-label> -->
+        <mat-select placeholder="Abteilung" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+          <mat-option value="ab">ab</mat-option>
+          <mat-option value="dc">dc</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <div class="col-md-2">
+      <mat-form-field style="width:90%">
+        <!-- <mat-label>Level</mat-label> -->
+        <mat-select placeholder="dlg1" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+          <mat-option value="ab">ab</mat-option>
+          <mat-option value="dc">dc</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-2">
+      <mat-form-field style="width:90%">
+        <!-- <mat-label>Level</mat-label> -->
+        <mat-select placeholder="dl2" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+          <mat-option value="ab">ab</mat-option>
+          <mat-option value="dc">dc</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-md-2">
+      <mat-form-field style="width:90%">
+        <!-- <mat-label>Level</mat-label> -->
+        <mat-select placeholder="dlg2del" [ngModelOptions]="{standalone: true}" #txtrollen2 [(ngModel)]="txtrollen">
+          <mat-option value="ab">ab</mat-option>
+          <mat-option value="dc">dc</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Tage" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="+T" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Stunden" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="+h" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="gelei" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-4">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Login" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-4">
+      <mat-form-field class="dlginput">
+        <input matInput [ngModelOptions]="{standalone: true}" type="text" placeholder="Logout" #txtname2
+          [(ngModel)]="txtname" />
+      </mat-form-field>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- <tr>
+
+            <td colspan="2">
+                <span class="einstellungenlabel">Gruppen:</span>
+                    <mat-form-field class="example-chip-list" style="width: 100%;">
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable" [removable]="removable"
+                                (removed)="remove(fruit)">
+                                {{fruit.name}}
+                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                            </mat-chip>
+                            <input #fruitInput [formControl]="fruitCtrl" [matAutocomplete]="auto" [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="add($event)" [matChipInputFor]="chipList" [matAutocomplete]="auto"
+                                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                        </mat-chip-list>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                            <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                                {{fruit}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    {{txtgruppen}}
+                </td>
+            </tr> -->
+
+
+  <hr />
+  <button type="button" color="" mat-raised-button>abbrechen</button>&nbsp;&nbsp;
+  <button type="submit" color="warn" mat-raised-button>speichern</button>
+</form>

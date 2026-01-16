@@ -1,0 +1,284 @@
+<div *ngIf="createEntry"
+  style="position: absolute;z-index:11;width:100%; height:100%; background-color:rgba(37, 37, 37, 0.623);overflow:hidden;">
+</div>
+<!-- neu/bearbeiten -->
+<div style=" left:0;  right:0;top:240px;  margin-left: auto;  margin-right: auto;  position: absolute;  width: 40%;">
+  <mat-card style="position:absolute; z-index:111;margin: auto;width:600px;    left: 50%;
+    transform: translateX(-50%);" *ngIf="createEntry">
+    <div style="position:absolute;right:10px; top:10px" (click)="createEntry=false"><i style="cursor:pointer;"
+        class="fas fa-times"></i>
+    </div>
+
+    <div class="row>">
+      <h3>Neuer Eintrag</h3>
+      <form class="col-md-12" #f (submit)="submitEntry(f, newentry)">
+
+
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label for="txtcontractor">Contracting Party</label>
+              <input type="text" class="form-control" name="txtcontractor" required [(ngModel)]="newentry.contractor">
+            </div>
+            <div class="form-group">
+              <label for="txtquotation">Quotation Description</label>
+              <input type="text" class="form-control" name="txtquotation" required [(ngModel)]="newentry.quotation">
+            </div>
+
+            <div class="row">
+
+              <div class="form-group col-md-6">
+                <label for="txtquotationsum">Total Sum according to Quotation</label>
+                <input type="number" class="form-control" name="txtquotationsum" required
+                  [(ngModel)]="newentry.quotationsum">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="txtquotationtax">Quotation Vat</label>
+                <input type="number" class="form-control" name="txtquotationtax" required
+                  [(ngModel)]="newentry.quotationtax">
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="form-group col-md-6">
+                <label for="txtquotationsum">Sum Single Invoice</label>
+                <input type="number" class="form-control" name="txtquotationsum" required
+                  [(ngModel)]="newentry.invoicesum">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="txtquotationsum">Invoice Tax</label>
+                <input type="number" class="form-control" name="txtquotationsum" required
+                  [(ngModel)]="newentry.invoicetax">
+              </div>
+            </div>
+
+            <div class="row">
+
+
+
+              <div class="form-group col-md-6">
+                <label for="txtstate">Status</label><br>
+                <!-- <div class="btn-group" (isOpenChange)="onOpenChange($event)" dropdown>
+                  <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                    aria-controls="dropdown-basic">
+                    {{newentry.state}}<span class="caret"></span>
+                  </button>
+                  <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                    aria-labelledby="button-basic">
+                    <li role="menuitem"><a class="dropdown-item" href="#">Offen</a></li>
+                    <li role="menuitem"><a class="dropdown-item" href="#">Bezahlt</a></li>
+                    <li role="menuitem"><a class="dropdown-item" href="#">Storniert</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li role="menuitem"><a class="dropdown-item" href="#">Sonstiges</a>
+                    </li>
+                  </ul>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-5">
+                <div class="">
+                  <label for="">Order Date</label>
+                  <input type="text" placeholder="" [(ngModel)]="newentry.orderdate" class="form-control" bsDatepicker
+                    name="txtorderdate" [(ngModel)]="newentry.orderdate" [bsConfig]="{ isAnimated: true }">
+                </div>
+
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label for="">Invoice Received</label>
+                  <input type="text" name="txt" placeholder="" [(ngModel)]="newentry.invoicedate" class="form-control"
+                    bsDatepicker name="txtinvoicedate" [(ngModel)]="newentry.invoicedate"
+                    [bsConfig]="{ isAnimated: true }" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
+        <div style="clear:both"></div>
+        <div class="row">
+
+          <hr>
+          <div style="float:right">
+            <button class="btn btn-default" (click)="createEntry=false">abbrechen</button>
+            <button type="submit" class="btn btn-primary">Eintrag hinzufügen</button>
+          </div>
+        </div>
+      </form>
+
+
+    </div>
+  </mat-card>
+</div>
+
+
+<div style="margin:10px 20px;">
+  <h2>Customer: {{project?.name}}</h2>
+  <div class="gap10"></div>
+
+  <mat-card *ngIf="project">
+    <h3 style="float:left">Summary</h3>
+    <button style="float:right;" type="button" mat-raised-button color="primary" (click)="createEntry= true">Neuen
+      Eintrag anlegen</button>
+
+    <div style="clear:both;"></div>
+
+    <div class="row">
+      <!-- {{ projects|json}} -->
+      <div class="col-md-3">
+        <div style="font-size:22px;">Tokens: {{project?.tokens ?? project?.credits}} </div>
+        <div style="font-size:22px;">Tokens Used: {{project?.tokensused ?? project?.creditsused}} </div>
+      </div>
+      <div class="col-md-3">
+        <div style="font-size:22px;">License: {{project?.license}} </div>
+        <div style="font-size:22px;">Date: {{project?.meta.createdate |date}} </div>
+      </div>
+      <div class="col-md-3">
+
+      </div>
+      <div class="col-md-3">
+
+      </div>
+    </div>
+
+  </mat-card>
+
+
+  <div class="gap10"></div>
+
+  <div class="gap10"></div>
+
+  <mat-card *ngIf="project">
+    <h3>Purchase Tokens</h3>
+    <p *ngIf="checkoutError" class="payment-error">{{ checkoutError }}</p>
+    <div class="row">
+      <div class="col-md-4" *ngFor="let pkg of paymentPackages">
+        <div class="package-card">
+          <div class="package-name">{{ pkg.name }}</div>
+          <div class="package-description">{{ pkg.description }}</div>
+          <div class="package-tokens">{{ pkg.tokens }} tokens</div>
+          <div class="package-price">{{ formatPackagePrice(pkg.price) }}</div>
+          <button mat-raised-button color="primary" (click)="startCheckout(pkg.id)"
+            [disabled]="checkoutLoading[pkg.id]">
+            {{ checkoutLoading[pkg.id] ? 'Processing...' : 'Buy Now' }}
+          </button>
+          <div *ngIf="checkoutLoading[pkg.id]" class="package-hint">Please do not close this window.</div>
+        </div>
+      </div>
+    </div>
+    <div class="payment-test-url">
+      <strong>Test URL:</strong>
+      <a [href]="paymentSuccessUrl" target="_blank" rel="noopener">{{ paymentSuccessUrl }}</a>
+    </div>
+  </mat-card>
+
+  <div class="gap10"></div>
+
+
+
+  <mat-card>
+
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <table class="table table-alternate table-hover">
+          <thead>
+            <tr>
+              <th>datetime</th>
+              <th>tokensatstart</th>
+              <th>jobid</th>
+              <th>state</th>
+              <th>type</th>
+              <th>projectid</th>
+            </tr>
+          </thead>
+          <tbody>
+
+
+
+            <tr *ngFor="let p of entries">
+
+              <td>{{p.datetime | date}} </td>
+              <td>{{p.creditsatstart}}</td>
+              <td>
+                {{p.jobid}}
+              </td>
+              <td>
+                {{p.state}}
+              </td>
+              <td>
+                {{p.type}}
+              </td>
+              <td>
+                {{p.projectid}}
+              </td>
+
+
+              <!-- <td>
+                <div class="btn-group" dropdown>
+                  <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                    aria-controls="dropdown-basic">
+                    Button dropdown <span class="caret"></span>
+                  </button>
+                  <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                    aria-labelledby="button-basic">
+                    <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+                    <li role="menuitem"><a class="dropdown-item" href="#">Another action</a></li>
+                    <li role="menuitem"><a class="dropdown-item" href="#">Something else here</a></li>
+                    <li class="divider dropdown-divider"></li>
+                    <li role="menuitem"><a class="dropdown-item" href="#">Separated link</a>
+                    </li>
+                  </ul>
+                </div>
+
+              </td> -->
+
+
+              <td>
+
+
+                <!-- <button *ngIf="p.Dauer" mat-flat-button color="" class="btn-functions"
+              [mdePopoverTriggerFor]="productPopover4" style="background-color: #f9f9f9;" mdePopoverTriggerOn="hover">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mde-popover #productPopover4="mdePopover" [mdePopoverOverlapTrigger]="false">
+              <mat-card style="max-width: 500px">
+                <mat-card-content>
+                  <prettyjson [obj]="p.Dauer"></prettyjson>
+                </mat-card-content>
+              </mat-card>
+            </mde-popover> -->
+
+              </td>
+
+
+
+            </tr>
+          </tbody>
+        </table>
+
+
+      </div>
+
+
+
+    </div>
+  </mat-card>
+
+
+
+
+  <div class="gap10"></div>
+
+
+
+
+</div>

@@ -1,0 +1,113 @@
+<div class="container" style="padding: 10px;">
+    <div class="gap10"></div>
+    <h2>
+        <mat-icon></mat-icon> Testrunner
+    </h2>
+
+    <div class="gap10"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <mat-card>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Customer</label>
+
+                        <select *ngIf="customers" class="form-control" name="txtcustomer" [(ngModel)]="customer">
+                            <!-- (change)="changeProject(newentry.projectid)" -->
+                            <ng-container *ngFor="let p of customers">
+                                <option [ngValue]="p.id">{{p.name}}</option>
+                            </ng-container>
+                        </select>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label>VM Type</label>
+
+                        <select *ngIf="machinetypes" class="form-control" name="txtname" [(ngModel)]="machine">
+                            <!-- (change)="changeProject(newentry.projectid)" -->
+                            <ng-container *ngFor="let p of machinetypes">
+                                <option [ngValue]="p" *ngIf="p.enabled">{{p.description}}</option>
+                            </ng-container>
+                        </select>
+                        <div style="font-size:12px">
+                            <div><strong>Name:</strong> {{machine.name}}</div>
+                            <div><strong>credits/minute:</strong> {{machine.creditsminute}}</div>
+                            <div><strong>cost/minute:</strong> {{machine.costestimatedminute}}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <br><br>
+                        <button class="btn btn-primary" (click)="starttestvm()">Start test VM</button>
+                    </div>
+                    <div class="col-md-2" style="padding-left:60px;">
+                        <label>VM Count</label>
+                        <input type="number" class="form-control" [(ngModel)]="count" />
+                    </div>
+                    <div class="col-md-2">
+                        <br><br>
+                        <button class="btn btn-primary" (click)="starttestcluster()" style="margin-left: 10px;">Start
+                            test
+                            Cluster</button>
+                    </div>
+
+
+                </div>
+
+            </mat-card>
+        </div>
+
+    </div>
+
+    <div class="gap10"></div>
+
+
+    <mat-card>
+
+        <ul>
+            <li *ngFor="let l of loglines">
+                Create VM: {{l}}
+            </li>
+        </ul>
+
+        <!-- <table class="table table-alternate table-hover">
+
+            <thead>
+                <tr>
+                    <th>VM Name</th>
+                    <th>State</th>
+                    <th>Credits</th>
+                    <th>Credits Used</th>
+                    <th>lastStartTimestamp</th>
+                    <th>lastStopTimestamp</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="vms">
+                <tr *ngFor="let p of vms">
+                     <td>{{p.name}}</td>
+                    <td style="font-weight: bold;">{{p.state}}</td>
+              
+                    <td style="font-weight: bold;">{{p.machineType}}</td>
+                    <td>
+                        {{p.networkinterface.networkIP}}
+                    </td>
+          
+
+                    <td style="color:gray;">{{p.lastStartTimestamp}}</td>
+                    <td style="color:gray;">{{p.lastStopTimestamp}}</td>
+
+                    <td>
+                        <button class="btn btn-outline-secondary btn-sm " (click)="stopVM(p)"
+                            style="margin-left:10px;">stop</button>
+
+
+
+                    </td>
+
+                </tr>
+            </tbody>
+        </table> -->
+    </mat-card>
+</div>

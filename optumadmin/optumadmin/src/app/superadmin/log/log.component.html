@@ -1,0 +1,126 @@
+<div class="container">
+  <div class="gap10"></div>
+
+  <mat-card>
+    <mat-card-content>
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <h2 style="margin-right:30px;">Logs</h2>
+          </td>
+          <td>
+            <mat-form-field class="example-full-width">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
+            </mat-form-field>
+            {{ filter }}
+          </td>
+          <td>
+            <!-- <mat-form-field>
+             <mat-label>Level</mat-label>
+              <mat-select placeholder="all">
+                <mat-option value="option">debug</mat-option>
+                <mat-option value="option">error</mat-option>
+                <mat-option value="option">info</mat-option>
+                <mat-option value="option">all</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+          </td>
+
+          <!-- <td>
+        <button mat-raised-button>Filter</button>
+      </td> -->
+          <!-- <td>
+
+            <div fxLayout="row wrap" fxLayoutAlign="space-around center">
+
+              <mat-slide-toggle [id]="34343"> fasdfas </mat-slide-toggle>
+              <mat-slide-toggle [id]="3433343">fdsfs fasdfas </mat-slide-toggle>
+            </div>
+          </td>
+          <td>
+            <button mat-raised-button (click)="openEditDialog(undefined)">new logitem</button>
+          </td> -->
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="gap10"></div>
+
+  <div class="mat-elevation-z2">
+    <mat-table #table [dataSource]="dataSource" matSort matSortActive="datetime" matSortDirection="desc" aria-label="Elements">
+      <!-- datetime Column -->
+      <ng-container matColumnDef="datetime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>datetime</mat-header-cell>
+        <mat-cell *matCellDef="let row"
+          ><div>
+            <div>{{ row.datetime | date: "short" }}</div>
+            <div style="font-size:10px;color:gray;">{{ row.datetime | amTimeAgo }}</div>
+          </div></mat-cell
+        >
+      </ng-container>
+      <!-- meta Column -->
+      <ng-container matColumnDef="meta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>meta</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button *ngIf="row.meta != {} && row.meta !== '{}' && row.meta != undefined" mat-icon-button [matMenuTriggerFor]="menu" matTooltip="PopOver Me!">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <!-- <span mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()"> -->
+            <!-- popover content begin -->
+            <div style="font-size:12px;height:400px;"><prettyjson [obj]="row.meta"></prettyjson></div>
+            <!--  -->
+            <!-- popover content end  -->
+            <!-- </span> -->
+          </mat-menu>
+        </mat-cell>
+      </ng-container>
+      <!-- message Column -->
+      <ng-container matColumnDef="message">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>message</mat-header-cell>
+        <mat-cell *matCellDef="let row" [innerHtml]="row.message"></mat-cell>
+      </ng-container>
+
+      <!-- source Column -->
+      <ng-container matColumnDef="source">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>source</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row.source }}</mat-cell>
+      </ng-container>
+
+      <!-- level Column -->
+      <ng-container matColumnDef="level">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>level</mat-header-cell>
+        <mat-cell *matCellDef="let row"><span [innerHTML]="row.level"></span></mat-cell>
+      </ng-container>
+
+      <!-- functions Column -->
+      <ng-container matColumnDef="functions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-raised-button mat-small color="warn" class="btn-functions mat-small" [matMenuTriggerFor]="deleteMenu">
+            <i class="fa far fa-trash"></i>
+          </button>
+          <mat-menu #deleteMenu="matMenu">
+            <div style="padding: 10px;">
+              <button mat-button>cancel</button>
+              <button mat-flat-button color="warn" (click)="deleteLog(row.id)">
+                delete
+              </button>
+            </div>
+          </mat-menu>
+          <!-- &nbsp;
+          <button mat-raised-button mat-small class="btn-functions mat-small" (click)="openEditDialog(row)">
+            <i class="fa far fa-window-restore"></i>
+          </button> -->
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [length]="dataSource?.data?.length" [pageIndex]="0" [pageSize]="50" [pageSizeOptions]="[5, 10, 50, 100]"> </mat-paginator>
+  </div>
+</div>

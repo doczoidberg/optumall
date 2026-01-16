@@ -1,0 +1,251 @@
+<div *ngIf="createCustomer || editCustomer"
+    style="position: absolute;z-index:11;width:100%; height:100%; background-color:rgba(37, 37, 37, 0.623);overflow:hidden;">
+</div>
+
+
+<!-- new customer dlg -->
+<div style=" left:0;  right:0;top:240px;  margin-left: auto;  margin-right: auto;  position: absolute;  width: 40%;">
+    <mat-card style="position:absolute; z-index:111;margin: auto;width:900px;    left: 50%;
+    transform: translateX(-50%);" *ngIf="createCustomer">
+        <div style="position:absolute;right:10px; top:10px" (click)="createCustomer=false"><i style="cursor:pointer;"
+                class="fas fa-times"></i>
+        </div>
+
+        <div class="row>">
+
+            <form class="col-md-12" #f (submit)="submitCustomer(f, newcustomer)">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="txtname">Customer Name</label>
+                            <input type="text" class="form-control" name="txtname" [(ngModel)]="newcustomer.name"
+                                placeholder="Customer Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtlicense">License Key</label>
+                            <input type="text" class="form-control" name="txtlicense" required
+                                [(ngModel)]="newcustomer.license" placeholder="xyz">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtcredits">Credits</label>
+                            <input type="number" class="form-control" name="txtcredits"
+                                [(ngModel)]="newcustomer.credits" placeholder="1000">
+                        </div>
+
+
+
+                        <!-- <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div> -->
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="txtname">Notes</label>
+                            <textarea type="text" rows="5" class="form-control" name="txtnotes"
+                                [(ngModel)]="newcustomer.notes" placeholder="Place for notes"></textarea>
+                        </div>
+                        <!-- <div class="input-group">
+                                <input type="text" class="form-control" id="validationTooltipUsername" name="txtnotes" [(ngModel)]="newcustomer.notes"
+                                    placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+                                <div class="input-group-apppend">
+                                    <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                                </div>
+                                <div class="invalid-tooltip">
+                                    Please choose a unique and valid username.
+                                </div>
+                            </div> -->
+
+
+                        <!-- <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                    </div> -->
+
+                    </div>
+
+                </div>
+                <div style="clear:both"></div>
+                <div class="row">
+
+                    <hr>
+                    <div style="float:right">
+                        <button class="btn btn-default" (click)="createCustomer=false">cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Customer</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </mat-card>
+</div>
+
+
+
+
+<!-- edit customer dialog -->
+<div style=" left:0;  right:0;top:240px;  margin-left: auto;  margin-right: auto;  position: absolute;  width: 40%;">
+    <mat-card style="position:absolute; z-index:111;margin: auto;width:900px;    left: 50%;
+    transform: translateX(-50%);" *ngIf="editCustomer">
+        <div style="position:absolute;right:10px; top:10px" (click)="editCustomer=false"><i style="cursor:pointer;"
+                class="fas fa-times"></i>
+        </div>
+
+        <div class="row>">
+            {{currentcustomer.name}}
+            <form class="col-md-12" #f (submit)="editCustomerData(f, currentcustomer)">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <!-- <div class="form-group">
+                            <label for="txtname">Customer Name</label>
+                            <input type="text" class="form-control" name="txtname" [(ngModel)]="currentcustomer.name"
+                                placeholder="Customer Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtlicense">License Key</label>
+                            <input type="text" class="form-control" name="txtlicense" required
+                                [(ngModel)]="currentcustomer.license" placeholder="xyz">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="txtcredits">Credits</label>
+                            <input type="number" class="form-control" name="txtcredits"
+                                [(ngModel)]="currentcustomer.credits" placeholder="1000">
+                        </div>
+
+
+
+                        <!-- <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div> -->
+
+                    </div>
+                    <div class="col-md-0">
+
+                        <!-- <div class="form-group">
+                            <label for="txtname">Notes</label>
+                            <textarea type="text" rows="5" class="form-control" name="txtnotes"
+                                [(ngModel)]="currentcustomer.notes" placeholder="Place for notes"></textarea>
+                        </div> -->
+
+                    </div>
+
+                </div>
+                <div style="clear:both"></div>
+                <div class="row">
+
+                    <hr>
+                    <div style="float:right">
+                        <button class="btn btn-default" (click)="editCustomer=false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Set Credits</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </mat-card>
+</div>
+
+
+<!-- master view   -->
+<div class="container" style="padding: 10px;">
+    <mat-card>
+        <h2 style="float:left">Customers/Credits</h2>
+        <button style="float:right;" type="button" mat-raised-button color="primary" (click)="createCustomer= true"><i
+                class="fa fas fa-plus-circle"></i> new customer</button>
+
+        <div style="clear:both;"></div>
+        <div class="row">
+
+            <div class="col-md-4 coldash1">
+                <div style="font-size:22px;">
+                    <div>{{customers.length}} Customers</div>
+                </div>
+            </div>
+            <div class="col-md-4 coldash2">
+
+                <div style="font-size:22px;">Credits open:
+                    <div [innerHTML]="(creditssum  | number:'1.2':'en') | amount: creditssum"></div>
+                </div>
+
+            </div>
+            <div class="col-md-4 coldash3">
+                <div style="font-size:22px;">Credits used:
+                    <div [innerHTML]="(creditsusedsum  | number:'1.2':'en') | amount: creditsusedsum"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </mat-card>
+
+
+
+
+
+    <div class="gap10"></div>
+
+    <mat-card>
+        <!-- <h1 class="mat-h1">Projekte</h1> -->
+
+
+
+        <table class="table table-alternate table-hover">
+
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Note</th>
+                    <th>Credits</th>
+                    <th>Credits Used</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of customers">
+                    <!-- <td><a [routerLink]="'/kunde/'+ p.Kunde">{{p.DashBoard?.Kunde}}</a></td> -->
+                    <td>{{p.name}}
+                        <div style="font-size:11px">ID: {{p.id}}</div>
+
+                    </td>
+                    <td style="color:gray;">{{p.notes}}</td>
+                    <td style="font-weight: bold;">{{p.credits}}</td>
+                    <!-- <td>{{p.creditors}} €</td> -->
+                    <td style="font-weight: bold;">{{p.creditsused}}</td>
+                    <td><a [routerLink]="'/customer'" [queryParams]="{id: p.id}"
+                            class="btn btn-outline-secondary btn-sm ">details</a>
+
+                        <button class="btn btn-outline-secondary btn-sm " (click)="showEditDlg(p)"
+                            style="margin-left:10px;"> set credits </button>
+
+
+                        <button class="btn btn-outline-secondary btn-sm " [matMenuTriggerFor]="menu"
+                            style="margin-left:10px;"> delete </button>
+                        <mat-menu #menu="matMenu">
+                            <div style="padding: 10px;">
+                                <button mat-button (click)="menu.closed.emit()">cancel</button>
+                                <button mat-flat-button color="warn" (click)="deleteCustomer(p.id)"
+                                    style="margin-left:10px;">
+                                    delete
+                                </button>
+                            </div>
+                        </mat-menu>
+
+
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+
+
+    </mat-card>
+</div>

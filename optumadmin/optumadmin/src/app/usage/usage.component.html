@@ -1,0 +1,116 @@
+<div class="container">
+  <div class="gap10"></div>
+
+
+  <mat-card>
+    <mat-card-content>
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+
+          <td>
+            <mat-form-field class="example-full-width">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
+
+          </td>
+          <td>
+
+          </td>
+          <td>
+
+          </td>
+
+          <td>
+            <!-- <button mat-raised-button color="warn" (click)="openDialog(null)">neuer Kunde</button> -->
+            <!-- <button mat-raised-button (click)="openEditDialog(undefined)">new logitem</button> -->
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+
+  <div class="gap10"></div>
+
+  <div class="mat-elevation-z2">
+
+    <mat-table #table [dataSource]="dataSource" matSort aria-label="Elements">
+      <!-- uid Column -->
+      <ng-container matColumnDef="uid">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>uid</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.uid}}</mat-cell>
+      </ng-container>
+
+      <!-- message Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+        <mat-cell *matCellDef="let row" [innerHtml]="row.name"></mat-cell>
+      </ng-container>
+
+      <!-- source Column -->
+      <ng-container matColumnDef="lastLogin">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>lastLogin</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.lastLogin | date:'short'}}</mat-cell>
+      </ng-container>
+
+      <!-- level Column -->
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</mat-header-cell>
+        <mat-cell *matCellDef="let row"><span [innerHTML]="row.mail "></span></mat-cell>
+      </ng-container>
+      <!-- meta Column -->
+      <ng-container matColumnDef="rollen">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Rolle</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.role}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="abrechnung">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Abrechnung</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.abrechnung}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="gruppen">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Gruppen</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.gruppen}}</mat-cell>
+      </ng-container>
+
+
+      <!-- functions Column -->
+      <ng-container matColumnDef="functions">
+        <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <!-- <button mat-stroked-button class="btn-functions">
+            <mat-icon>add_box</mat-icon>Add
+          </button> -->
+          <button mat-flat-button color="warn" class="btn-functions" [matMenuTriggerFor]="deleteMenu">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <mat-menu #deleteMenu="matMenu">
+            <div style="padding: 10px;">
+              <button mat-button>cancel</button>
+              <button mat-flat-button color="warn" (click)="deleteLog(row.id, row.uid)">
+                delete
+              </button>
+            </div>
+          </mat-menu>
+
+          <button mat-flat-button class="btn-functions" (click)="openDialog(row)">
+            <mat-icon>library_books</mat-icon>
+          </button>
+
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [length]="dataSource?.data?.length" [pageIndex]="0" [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 50, 100]">
+    </mat-paginator>
+
+
+
+  </div>
+
+</div>

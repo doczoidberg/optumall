@@ -1,0 +1,90 @@
+<div class="container" style="padding: 10px;">
+    <div class="gap10"></div>
+
+    <h2>
+        <mat-icon>settings</mat-icon> Settings
+    </h2>
+    <!-- 
+  <button type="button" mat-raised-button color="primary" (click)="newProject()">Neues Projekt anlegen</button> -->
+
+
+    <div class="gap10"></div>
+
+    <div class="row">
+
+
+
+        <div class="col-md-12">
+            <mat-card>
+                <h3>Machine Types</h3>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <table class="table table-alternate table-hover">
+                            <thead>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Enabled</th>
+                                <th>Credits/Minute <span style="font-size:10px;">(credits)</span></th>
+                                <th>Esimated Costs/Minute <span style="font-size:10px;">(cent)</span></th>
+                                <!-- <th>CPUs</th>
+                                <th>memoryMb</th>
+                                <th>Shared CPU</th> -->
+                                <th>Info</th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let m of machinetypes">
+                                    <td>{{m.name}}</td>
+                                    <td>{{m.description}}</td>
+                                    <td>
+                                        <mat-checkbox [(ngModel)]="m.enabled" (change)="onCheckChange(m)">
+                                        </mat-checkbox>
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm " type="number"
+                                            [(ngModel)]="m.creditsminute" (blur)="savemachinetype(m)" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm " type="number"
+                                            [(ngModel)]="m.costestimatedminute" (blur)="savemachinetype(m)" />
+                                    </td>
+                                    <td>{{m.deprecated?.state}}</td>
+                                    <!-- <td>{{m.guestCpus}}</td>
+                                    <td>{{m.memoryMb}}</td>
+                                    <td>{{m.isSharedCpu}}</td> -->
+                                    <!-- <td>
+                                        <a [href]="m.selfLink">link</a>
+                                    </td> -->
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- creationTimestamp: "1969-12-31T16:00:00.000-08:00"
+                        description: "Compute Optimized: 16 vCPUs, 64 GB RAM"
+                        guestCpus: 16
+                        id: "801016"
+                        imageSpaceGb: 0
+                        isSharedCpu: false
+                        kind: "compute#machineType"
+                        maximumPersistentDisks: 128
+                        maximumPersistentDisksSizeGb: "263168"
+                        memoryMb: 65536
+                        name: "c2-standard-16"
+                        selfLink:
+                        "https://www.googleapis.com/compute/v1/projects/optum-80593/zones/europe-west1-b/machineTypes/c2-standard-16" -->
+
+                    </div>
+
+
+                </div>
+
+            </mat-card>
+        </div>
+
+    </div>
+
+
+    <div class="gap10"></div>
+
+</div>

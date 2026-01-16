@@ -1,0 +1,44 @@
+.admin-users-container {
+  display: grid;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.admin-users-card {
+  padding: 16px;
+}
+
+.add-user-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: center;
+}
+
+.role-select {
+  width: 160px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.empty-state,
+.table-loading {
+  margin: 16px 0 0;
+  color: #666666;
+  font-size: 14px;
+}
+
+.invite-link {
+  margin-top: 24px;
+}
+
+.invite-link-field {
+  width: 100%;
+}

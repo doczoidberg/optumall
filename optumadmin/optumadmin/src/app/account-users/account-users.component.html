@@ -1,0 +1,187 @@
+<div class="container-fluid mt-4">
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading account details...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-3" routerLink="/accounts">Back to Accounts</button>
+  </div>
+
+  <!-- Account Details -->
+  <div *ngIf="!loading && !error && account">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h2>{{ account.name }}</h2>
+            <p class="text-muted mb-0">
+              <span class="badge"
+                [ngClass]="{
+                  'bg-primary': account.type === 0,
+                  'bg-success': account.type === 1,
+                  'bg-info': account.type === 3
+                }">
+                {{ account.type_name }}
+              </span>
+              <span class="ms-2" *ngIf="account.domain">{{ account.domain }}</span>
+            </p>
+          </div>
+          <div>
+            <button class="btn btn-outline-secondary me-2" routerLink="/accounts">
+              <i class="bi bi-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-success me-2" (click)="buyCredits()" *ngIf="account.type === 1">
+              <i class="bi bi-credit-card"></i> Buy Credits
+            </button>
+            <button class="btn btn-primary" (click)="refresh()">
+              <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users List -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Users ({{ account.users?.length || 0 }})</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="account.users && account.users.length > 0">
+          <!-- User Cards -->
+          <div class="row">
+            <div class="col-md-12 mb-3" *ngFor="let user of account.users">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <!-- Left Column: Basic Info -->
+                    <div class="col-md-6">
+                      <div class="d-flex align-items-start mb-3">
+                        <div class="me-3">
+                          <span class="badge bg-secondary" style="font-size: 0.75rem;">ID: {{ user.id }}</span>
+                        </div>
+                        <div class="flex-grow-1">
+                          <h5 class="mb-1">{{ user.name }}</h5>
+                          <p class="text-muted mb-2">
+                            <i class="bi bi-envelope"></i> {{ user.email }}
+                          </p>
+                          <p class="text-muted mb-2" *ngIf="user.phone_number">
+                            <i class="bi bi-telephone"></i> {{ user.phone_number }}
+                          </p>
+                          <p class="text-muted mb-0" *ngIf="user.title">
+                            <i class="bi bi-briefcase"></i> {{ user.title }}
+                          </p>
+                        </div>
+                      </div>
+
+                      <!-- Roles and Status -->
+                      <div class="mb-2">
+                        <strong>Global Role:</strong>
+                        <span class="badge ms-2"
+                          [ngClass]="{
+                            'bg-danger': user.role === 2,
+                            'bg-warning': user.role === 1,
+                            'bg-secondary': user.role === 0
+                          }">
+                          {{ user.global_role_name }}
+                        </span>
+                      </div>
+                      <div class="mb-2" *ngIf="user.organization_role_name">
+                        <strong>Organization Role:</strong>
+                        <span class="badge ms-2"
+                          [ngClass]="{
+                            'bg-primary': user.organization_role === 1,
+                            'bg-light text-dark': user.organization_role === 0
+                          }">
+                          {{ user.organization_role_name }}
+                        </span>
+                      </div>
+                      <div class="mb-2">
+                        <strong>Status:</strong>
+                        <span class="badge ms-2" [ngClass]="user.email_validated ? 'bg-success' : 'bg-warning'">
+                          {{ user.email_validated ? 'Verified' : 'Unverified' }}
+                        </span>
+                        <span class="ms-2" *ngIf="user.two_factor_enabled" title="Two-Factor Authentication Enabled">
+                          <i class="bi bi-shield-check text-success"></i> 2FA
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Right Column: Additional Info -->
+                    <div class="col-md-6">
+                      <!-- Address Info -->
+                      <div *ngIf="user.street || user.city || user.region || user.zipcode || user.country">
+                        <h6 class="mb-2"><i class="bi bi-geo-alt"></i> Address</h6>
+                        <p class="text-muted mb-1" *ngIf="user.street">{{ user.street }}</p>
+                        <p class="text-muted mb-1" *ngIf="user.city || user.region || user.zipcode">
+                          <span *ngIf="user.city">{{ user.city }}</span><span *ngIf="user.city && user.region">, </span><span *ngIf="user.region">{{ user.region }}</span><span *ngIf="user.zipcode"> {{ user.zipcode }}</span>
+                        </p>
+                        <p class="text-muted mb-2" *ngIf="user.country">{{ user.country }}</p>
+                      </div>
+
+                      <!-- Organization Field -->
+                      <div *ngIf="user.organization_field" class="mb-2">
+                        <strong>Organization:</strong> {{ user.organization_field }}
+                      </div>
+
+                      <!-- Created Date -->
+                      <div class="text-muted small">
+                        <i class="bi bi-calendar"></i> Created: {{ user.created_date | date:'medium' }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!account.users || account.users.length === 0" class="text-center text-muted py-4">
+          No users in this account.
+        </div>
+      </div>
+    </div>
+
+    <!-- Groups Table -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Groups ({{ account.groups?.length || 0 }})</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive" *ngIf="account.groups && account.groups.length > 0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Members</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let group of account.groups">
+                <td>{{ group.id }}</td>
+                <td><strong>{{ group.name }}</strong></td>
+                <td>{{ group.description || '-' }}</td>
+                <td>
+                  <span class="badge bg-light text-dark">{{ group.total_members }} members</span>
+                </td>
+                <td>{{ group.created_date | date:'short' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="!account.groups || account.groups.length === 0" class="text-center text-muted py-4">
+          No groups in this account.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

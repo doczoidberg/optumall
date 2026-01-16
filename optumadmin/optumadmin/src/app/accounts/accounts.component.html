@@ -1,0 +1,232 @@
+<div class="container-fluid mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h2>Accounts & Organizations</h2>
+      <p class="text-muted">View and manage accounts from the license management system</p>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4" *ngIf="stats">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Accounts</h5>
+          <h2>{{ stats.total_accounts }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Users</h5>
+          <h2>{{ stats.total_users }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <h5 class="card-title">Total Groups</h5>
+          <h2>{{ stats.total_groups }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-white">
+        <div class="card-body">
+          <h5 class="card-title">Verified Users</h5>
+          <h2>{{ stats.verified_users }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search, Filter and Actions -->
+  <div class="row mb-3">
+    <div class="col-md-5">
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search accounts by name, domain..."
+          [(ngModel)]="searchQuery"
+          (input)="filterAccounts()"
+        >
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedType" (change)="filterAccounts()">
+        <option *ngFor="let type of accountTypes" [value]="type.value">
+          {{ type.label }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" [(ngModel)]="pageSize" (change)="changePageSize()">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }} per page
+        </option>
+      </select>
+    </div>
+    <div class="col-md-2 text-end">
+      <button class="btn btn-primary" (click)="refresh()">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Info -->
+  <div class="row mb-2" *ngIf="!loading && !error">
+    <div class="col-md-12">
+      <p class="text-muted mb-0">
+        Showing {{ ((currentPage - 1) * pageSize) + 1 }} - {{ Math.min(currentPage * pageSize, filteredAccounts.length) }}
+        of {{ filteredAccounts.length }} accounts
+        <span *ngIf="filteredAccounts.length !== accounts.length">(filtered from {{ accounts.length }} total)</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading accounts...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+
+  <!-- Accounts Table -->
+  <div *ngIf="!loading && !error" class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th (click)="sortBy('id')" style="cursor: pointer;">
+                ID
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'id' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'id' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'id'
+                }"></i>
+              </th>
+              <th (click)="sortBy('name')" style="cursor: pointer;">
+                Name
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'name' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'name' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'name'
+                }"></i>
+              </th>
+              <th (click)="sortBy('domain')" style="cursor: pointer;">
+                Domain
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'domain' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'domain' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'domain'
+                }"></i>
+              </th>
+              <th (click)="sortBy('type')" style="cursor: pointer;">
+                Type
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'type' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'type' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'type'
+                }"></i>
+              </th>
+              <th (click)="sortBy('total_members')" style="cursor: pointer;">
+                Members
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'total_members' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'total_members' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'total_members'
+                }"></i>
+              </th>
+              <th (click)="sortBy('created_date')" style="cursor: pointer;">
+                Created Date
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'created_date' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'created_date' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'created_date'
+                }"></i>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let account of paginatedAccounts">
+              <td>{{ account.id }}</td>
+              <td>
+                <strong>{{ account.name }}</strong>
+              </td>
+              <td>
+                <span class="badge bg-secondary" *ngIf="account.domain">{{ account.domain }}</span>
+                <span class="text-muted" *ngIf="!account.domain">-</span>
+              </td>
+              <td>
+                <span class="badge"
+                  [ngClass]="{
+                    'bg-primary': account.type === 0,
+                    'bg-success': account.type === 1,
+                    'bg-info': account.type === 3
+                  }">
+                  {{ account.type_name }}
+                </span>
+              </td>
+              <td>
+                <span class="badge bg-light text-dark">{{ account.total_members }} members</span>
+              </td>
+              <td>{{ account.created_date | date:'short' }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="viewAccount(account)"
+                  title="View Details">
+                  <i class="bi bi-eye"></i> View
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedAccounts.length === 0">
+              <td colspan="7" class="text-center text-muted py-4">
+                No accounts found matching your search.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="row mt-3" *ngIf="totalPages > 1">
+        <div class="col-md-12">
+          <nav>
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(1)" style="cursor: pointer;">First</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="goToPage(currentPage - 1)" style="cursor: pointer;">Previous</a>
+              </li>
+              <li class="page-item" *ngFor="let page of pageNumbers" [class.active]="page === currentPage">
+                <a class="page-link" (click)="goToPage(page)" style="cursor: pointer;">{{ page }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(currentPage + 1)" style="cursor: pointer;">Next</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="goToPage(totalPages)" style="cursor: pointer;">Last</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

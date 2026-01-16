@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1100"
+   height="700"
+   viewBox="0 0 1100 700"
+   version="1.1"
+   id="svg74"
+   sodipodi:docname="architecture.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview74"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.178848"
+     inkscape:cx="636.63847"
+     inkscape:cy="291.38616"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg74" />
+  <defs
+     id="defs2">
+    <style
+       id="style1">
+      .box {
+        fill: #ffffff;
+        stroke: #1a73e8;
+        stroke-width: 2;
+        rx: 8;
+        ry: 8;
+      }
+      .box-secondary {
+        fill: #f8f9fa;
+        stroke: #8ab4f8;
+        stroke-width: 1.5;
+        rx: 6;
+        ry: 6;
+      }
+      .box-api {
+        fill: #e8f5e9;
+        stroke: #4caf50;
+        stroke-width: 2;
+        rx: 6;
+        ry: 6;
+      }
+      .text {
+        font-family: &quot;Segoe UI&quot;, Arial, sans-serif;
+        font-size: 13px;
+        fill: #202124;
+      }
+      .title {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .arrow {
+        fill: none;
+        stroke: #5f6368;
+        stroke-width: 2;
+        marker-end: url(#arrowhead);
+      }
+      .arrow-green {
+        fill: none;
+        stroke: #4caf50;
+        stroke-width: 2;
+        marker-end: url(#arrowhead-green);
+      }
+      .code {
+        font-family: &quot;Courier New&quot;, monospace;
+        font-size: 11px;
+        fill: #333;
+      }
+    </style>
+    <marker
+       id="arrowhead"
+       markerWidth="10"
+       markerHeight="7"
+       refX="9"
+       refY="3.5"
+       orient="auto">
+      <polygon
+         points="0 0, 10 3.5, 0 7"
+         fill="#5f6368"
+         id="polygon1" />
+    </marker>
+    <marker
+       id="arrowhead-green"
+       markerWidth="10"
+       markerHeight="7"
+       refX="9"
+       refY="3.5"
+       orient="auto">
+      <polygon
+         points="0 0, 10 3.5, 0 7"
+         fill="#4caf50"
+         id="polygon2" />
+    </marker>
+  </defs>
+  <!-- Title -->
+  <text
+     x="550"
+     y="30"
+     class="text"
+     style="font-size:20px; font-weight:700; text-anchor:middle; fill:#1a73e8;"
+     id="text2">Simulation Client → Cloud Functions Workflow</text>
+  <!-- Desktop Client -->
+  <rect
+     x="50"
+     y="80"
+     width="220"
+     height="120"
+     class="box"
+     id="rect2" />
+  <text
+     x="60"
+     y="110"
+     class="text title"
+     id="text3">Desktop Simulation Client</text>
+  <text
+     x="60"
+     y="135"
+     class="text"
+     id="text4">C++ / Python / Java app</text>
+  <text
+     x="60"
+     y="155"
+     class="text"
+     id="text5">Calls compute workloads</text>
+  <text
+     x="60"
+     y="175"
+     class="text"
+     id="text6">Makes HTTPS API calls</text>
+  <!-- API Endpoints -->
+  <rect
+     x="360.08008"
+     y="60.080078"
+     width="319.83984"
+     height="576.00952"
+     class="box-secondary"
+     id="rect6" />
+  <text
+     x="380"
+     y="90"
+     class="text title"
+     style="font-size:18px;"
+     id="text7">Cloud Functions API</text>
+  <text
+     x="380"
+     y="110"
+     class="text"
+     style="font-size:11px;"
+     id="text8">Base: us-central1-optum-80593.cloudfunctions.net</text>
+  <!-- 1. getCredits -->
+  <rect
+     x="380"
+     y="130"
+     width="280"
+     height="85"
+     class="box-api"
+     id="rect8" />
+  <text
+     x="390"
+     y="150"
+     class="text title"
+     style="font-size:14px;"
+     id="text9">1. GET /getCredits</text>
+  <text
+     x="390"
+     y="168"
+     class="code"
+     id="text10">Params: customerId</text>
+  <text
+     x="390"
+     y="185"
+     class="code"
+     style="font-size:10px;"
+     id="text11">Returns: {</text>
+  <text
+     x="400"
+     y="198"
+     class="code"
+     style="font-size:10px;"
+     id="text12">  tokens: 1000, tokensUsed: 250,</text>
+  <text
+     x="400"
+     y="210"
+     class="code"
+     style="font-size:10px;"
+     id="text13">  tokensRemaining: 750 }</text>
+  <!-- 2. createCompute -->
+  <rect
+     x="380"
+     y="230"
+     width="280"
+     height="85"
+     class="box-api"
+     id="rect13" />
+  <text
+     x="390"
+     y="250"
+     class="text title"
+     style="font-size:14px;"
+     id="text14">2. POST /createCompute</text>
+  <text
+     x="390"
+     y="268"
+     class="code"
+     id="text15">Params: projectFile (gs://), meshFile</text>
+  <text
+     x="390"
+     y="285"
+     class="code"
+     style="font-size:10px;"
+     id="text16">Returns: { computeid, status }</text>
+  <text
+     x="390"
+     y="302"
+     class="code"
+     style="font-size:10px;"
+     id="text17">type: computeEngine | freeServer</text>
+  <!-- 3. uploadFile -->
+  <rect
+     x="380"
+     y="330"
+     width="280"
+     height="80"
+     class="box-api"
+     id="rect17" />
+  <text
+     x="390"
+     y="350"
+     class="text title"
+     style="font-size:14px;"
+     id="text18">3. POST /uploadFile</text>
+  <text
+     x="390"
+     y="368"
+     class="code"
+     id="text19">Params: customerId, projectId, base64 file</text>
+  <text
+     x="390"
+     y="385"
+     class="code"
+     style="font-size:10px;"
+     id="text20">Returns gs:// path for mesh/artifact</text>
+  <!-- 4. getComputeState -->
+  <rect
+     x="380"
+     y="420"
+     width="280"
+     height="95"
+     class="box-api"
+     id="rect20" />
+  <text
+     x="390"
+     y="440"
+     class="text title"
+     style="font-size:14px;"
+     id="text21">4. GET /getComputeState</text>
+  <text
+     x="390"
+     y="458"
+     class="code"
+     id="text22">Params: computeid</text>
+  <text
+     x="390"
+     y="475"
+     class="code"
+     style="font-size:10px;"
+     id="text23">Returns: status, timestamps</text>
+  <!-- 5. getSimulationResults -->
+  <rect
+     x="380"
+     y="530"
+     width="280"
+     height="85"
+     class="box-api"
+     id="rect23" />
+  <text
+     x="390"
+     y="550"
+     class="text title"
+     style="font-size:14px;"
+     id="text24">5. GET /getSimulationResults</text>
+  <text
+     x="390"
+     y="568"
+     class="code"
+     id="text25">Params: computeid</text>
+  <text
+     x="390"
+     y="585"
+     class="code"
+     style="font-size:10px;"
+     id="text26">Returns: gs:// path + signed URL</text>
+  <!-- Data Stores -->
+  <rect
+     x="699.91455"
+     y="129.91454"
+     width="220.17094"
+     height="101.979"
+     class="box-secondary"
+     id="rect26" />
+  <text
+     x="710"
+     y="160"
+     class="text title"
+     id="text27">Firestore</text>
+  <text
+     x="710"
+     y="180"
+     class="text"
+     style="font-size:12px;"
+     id="text28">machines, customers, projectFiles</text>
+  <text
+     x="710"
+     y="198"
+     class="text"
+     style="font-size:12px;"
+     id="text29">stores projectJson + state</text>
+  <rect
+     x="700"
+     y="290"
+     width="220"
+     height="140"
+     class="box-secondary"
+     id="rect29" />
+  <text
+     x="710"
+     y="320"
+     class="text title"
+     id="text30">Cloud Storage</text>
+  <text
+     x="710"
+     y="340"
+     class="text"
+     style="font-size:12px;"
+     id="text31">projects/{project}/{customer}</text>
+  <text
+     x="710"
+     y="358"
+     class="text"
+     style="font-size:12px;"
+     id="text32">mesh/artifact objects (gs://)</text>
+  <rect
+     x="950.0285"
+     y="300.02847"
+     width="140.14012"
+     height="99.943039"
+     class="box-secondary"
+     id="rect32" />
+  <text
+     x="960"
+     y="330"
+     class="text title"
+     id="text33">Compute Engine</text>
+  <text
+     x="960"
+     y="350"
+     class="text"
+     id="text34">Cloud VM</text>
+  <rect
+     x="950.03833"
+     y="430.03833"
+     width="143.71939"
+     height="119.92334"
+     class="box-secondary"
+     id="rect34" />
+  <text
+     x="960"
+     y="460"
+     class="text title"
+     id="text35">Free Server</text>
+  <text
+     x="960"
+     y="480"
+     class="text"
+     style="font-size:12px;"
+     id="text36">createCompute option</text>
+  <text
+     x="960"
+     y="500"
+     class="text"
+     style="font-size:12px;"
+     id="text37">Queues job to dedicated</text>
+  <text
+     x="960"
+     y="518"
+     class="text"
+     style="font-size:12px;"
+     id="text38">machine instead of GCE</text>
+  <!-- Calculation Kernel -->
+  <rect
+     x="697.45514"
+     y="558.30341"
+     width="220"
+     height="100"
+     class="box-api"
+     id="rect38"
+     style="fill:#d6c9c9;fill-opacity:1;stroke:#98965d;stroke-opacity:1" />
+  <text
+     x="710"
+     y="590"
+     class="text title"
+     id="text39">Calculation Kernel</text>
+  <text
+     x="710"
+     y="610"
+     class="text"
+     style="font-size:12px;"
+     id="text40">calculationKernel.exe</text>
+  <text
+     x="710"
+     y="628"
+     class="code"
+     style="font-size:10px;"
+     id="text41">--projectFile --meshFile</text>
+  <text
+     x="710"
+     y="645"
+     class="text"
+     style="font-size:11px"
+     id="text42">Runs on provisioned VM or free server</text>
+  <!-- Workflow Steps -->
+  <!-- Arrows from client to APIs -->
+  <line
+     x1="270"
+     y1="130"
+     x2="380"
+     y2="172"
+     class="arrow-green"
+     id="line59" />
+  <line
+     x1="270"
+     y1="145"
+     x2="380"
+     y2="272"
+     class="arrow-green"
+     id="line60" />
+  <line
+     x1="270"
+     y1="160"
+     x2="380"
+     y2="362"
+     class="arrow-green"
+     id="line61" />
+  <line
+     x1="270"
+     y1="175"
+     x2="380"
+     y2="472"
+     class="arrow-green"
+     id="line62" />
+  <line
+     x1="270"
+     y1="190"
+     x2="380"
+     y2="572"
+     class="arrow-green"
+     id="line63" />
+  <!-- Storage/Data flow -->
+  <line
+     x1="660.59985"
+     y1="395.79263"
+     x2="700.59985"
+     y2="370.79263"
+     class="arrow"
+     id="line64" />
+  <line
+     x1="700"
+     y1="345"
+     x2="660"
+     y2="265"
+     class="arrow"
+     id="line65" />
+  <line
+     x1="920"
+     y1="330"
+     x2="950"
+     y2="330"
+     class="arrow"
+     id="line67" />
+  <line
+     x1="950"
+     y1="350"
+     x2="920"
+     y2="350"
+     class="arrow"
+     id="line68" />
+  <path
+     d="m 916.82866,431.05361 v 69.6009 h 33.24238"
+     class="arrow"
+     id="path68" />
+  <path
+     d="m 949.40017,532.5964 h -50 v -100"
+     class="arrow"
+     id="path69" />
+  <line
+     x1="700.13184"
+     y1="429.86777"
+     x2="604.96484"
+     y2="528.39545"
+     class="arrow"
+     id="line69" />
+  <!-- Kernel to getComputeState (log files) -->
+  <text
+     x="711.47272"
+     y="673.81085"
+     class="text"
+     style="font-weight:600;font-size:11px;fill:#000000;fill-opacity:1"
+     id="text71">log files</text>
+  <text
+     x="760.57227"
+     y="673.84198"
+     class="text"
+     style="font-weight:600;font-size:11px;font-family:'Segoe UI', Arial, sans-serif;fill:#000000;fill-opacity:1"
+     id="text71-0">resultfiles</text>
+  <!-- Labels -->
+  <text
+     x="273.40189"
+     y="124.59726"
+     class="text"
+     style="font-weight:600;font-size:12px;fill:#4caf50"
+     id="text72">HTTPS API Calls</text>
+  <!-- Bottom note -->
+</svg>

@@ -1,0 +1,127 @@
+<div class="container" style="padding: 10px;">
+  <div class="gap10"></div>
+
+  <h2>Dashboard</h2>
+  <!-- 
+  <button type="button" mat-raised-button color="primary" (click)="newProject()">Neues Projekt anlegen</button> -->
+
+
+  <div class="gap10"></div>
+
+  <div class="row">
+
+
+
+    <div class="col-md-12">
+      <mat-card>
+        <h2>Summary</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <div>
+              <h4>Last 24 hours</h4>
+              <ul>
+                <li>3 Active Customers</li>
+                <li>12 Credits used</li>
+                <li><a style="color:green;" [routerLink]="'/logs'">0 Aborts/Errors</a></li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div>
+              <h4>Last Week</h4>
+              <ul>
+                <li>33 Active Customers</li>
+                <li>333 Credits used</li>
+                <li><a style="color:red;" [routerLink]="'/logs'">1 Aborts/Errors</a></li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div>
+              <h4>Last Month </h4>
+              <ul>
+                <li>123 Active Customers</li>
+                <li>4312 Credits used</li>
+                <li><a style="color:red;" [routerLink]="'/logs'">1 Aborts/Errors</a></li>
+
+              </ul>
+            </div>
+          </div>
+
+
+        </div>
+
+      </mat-card>
+    </div>
+
+  </div>
+
+
+  <div class="gap10"></div>
+
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <mat-card>
+        <h1 class="mat-h1">Usage</h1>
+        <table class="table table-alternate table-hover">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Credits used</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of projects">
+              <td>{{p.name}}</td>
+              <td>{{p.budget}} </td>
+              <td>{{p.spend}} </td>
+              <td><a [routerLink]="'/usage'" [queryParams]="{id: p.id}">more</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="height:22px">
+          <a style="float:right;" [routerLink]="'/usage'">all usage</a>
+        </div>
+        <!-- <div style="height:22px">
+          <a style="float:right;" [routerLink]="'/projekte'">alle Projekte</a>
+        </div> -->
+      </mat-card>
+
+
+
+    </div>
+
+    <div class="col-md-6">
+      <mat-card>
+        <h1 class="mat-h1">Logs</h1>
+
+        <table class="table table-alternate table-hover">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Message</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of logs">
+              <td>{{p.datetime | date:'shortDate'}}</td>
+              <td>{{p.type}} </td>
+              <td>{{p.message}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="height:22px">
+          <a style="float:right;" [routerLink]="'/logs'">all Logs</a>
+        </div>
+      </mat-card>
+
+
+    </div>

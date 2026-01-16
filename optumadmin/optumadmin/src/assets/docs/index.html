@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Optum Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .docs-list {
+            list-style: none;
+        }
+
+        .doc-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #1a73e8;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .doc-item:hover {
+            background: #e8f0fe;
+            transform: translateX(5px);
+        }
+
+        .doc-item.private {
+            border-left-color: #c62828;
+            background: #fff5f5;
+        }
+
+        .doc-item.private:hover {
+            background: #ffe5e5;
+        }
+
+        .doc-item h2 {
+            margin-bottom: 8px;
+            font-size: 1.5em;
+        }
+
+        .doc-item h2 a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .doc-item h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .doc-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .doc-meta {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .endpoint-url {
+            background: #263238;
+            color: #aed581;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .base-url {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .base-url strong {
+            color: #856404;
+        }
+
+        .base-url code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        #doc-viewer {
+            display: none;
+        }
+
+        #doc-viewer.active {
+            display: block;
+        }
+
+        #doc-list.hidden {
+            display: none;
+        }
+
+        .back-button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .back-button:hover {
+            background: #1557b0;
+        }
+
+        #markdown-content h1 {
+            color: #1a73e8;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        #markdown-content h2 {
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        #markdown-content h3 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        #markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        #markdown-content table th,
+        #markdown-content table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #markdown-content table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        #markdown-content pre {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        #markdown-content code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        #markdown-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        #markdown-content blockquote {
+            border-left: 4px solid #ddd;
+            padding-left: 16px;
+            color: #666;
+            margin: 16px 0;
+        }
+
+        #markdown-content ul, #markdown-content ol {
+            margin: 12px 0;
+            padding-left: 30px;
+        }
+
+        #markdown-content li {
+            margin: 6px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 999px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 10px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-private {
+            background: #c62828;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="doc-list">
+            <h1>API Documentation</h1>
+            <p class="subtitle">Cloud Functions API endpoints for Google Compute Engine VM management</p>
+
+            <div class="base-url">
+                <strong>Base URL:</strong> <code>https://us-central1-optum-80593.cloudfunctions.net</code>
+            </div>
+
+            <div style="margin-bottom: 30px; padding: 15px; background: #f4f1fb; border-left: 4px solid #673ab7; border-radius: 4px;">
+                <strong style="color:#4527a0;">Need the full workflow?</strong>
+                <a href="architecture.svg" target="_blank" rel="noopener" style="margin-left:8px; color:#673ab7; text-decoration:underline;">
+                    View the architecture diagram (SVG)
+                </a>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h2 style="color: #1a73e8; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0;">Key Parameters</h2>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+                    <h3 style="margin-top: 0; color: #333;">Common Parameters</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #e8f0fe;">
+                                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Parameter</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Type</th>
+                                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><code>computeid</code></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">string</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Unique identifier for a VM instance in GCP (e.g., "vm-customer-123")</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><code>projectId</code></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">string</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Firestore document ID for a customer project/account</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><code>customerId</code></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">string</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Customer account identifier (same as projectId in most contexts)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><code>machineType</code></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">string</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Friendly profile label (`fast`, `very fast`, `fastest`).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 style="color: #1a73e8; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0;">Data Structures</h2>
+
+                <details style="background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #4caf50;">
+                    <summary style="cursor:pointer; font-weight:600; color:#333;">Machine / VM <small style="color:#666;">(collection: machines)</small></summary>
+                    <pre style="margin-top:15px; background: #263238; color: #aed581; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>{
+  "id": "string",              // Firestore document ID
+  "computeid": "string",       // GCP instance name
+  "customerId": "string",      // Associated customer/project ID
+  "zone": "string",            // GCP zone (e.g., "us-central1-a")
+  "requestedType": "string",   // Friendly profile label ("fast", "very fast", "fastest")
+  "resolvedMachineType": "string", // Backing GCE type (e.g., "n2d-standard-8")
+  "status": "string",          // "RUNNING", "TERMINATED", "STOPPING"
+  "creationTimestamp": "timestamp",
+  "lastStartTimestamp": "timestamp",
+  "lastStopTimestamp": "timestamp",
+  "diskSizeGb": number,        // Boot disk size
+  "networkIP": "string",       // Internal IP address
+  "externalIP": "string",      // External IP (if assigned)
+  "cpuPlatform": "string",     // CPU architecture
+  "projectFilePath": "string", // gs:// path to project bundle
+  "meshFilePath": "string",    // gs:// path to primary mesh artifact
+  "resultFilePath": "string",  // gs:// path to simulation result archive
+  "pricing": {                 // Hourly cost details
+    "cpu": number,
+    "memory": number,
+    "total": number
+  }
+}</code></pre>
+                </details>
+
+                <details style="background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
+                    <summary style="cursor:pointer; font-weight:600; color:#333;">Project / Customer <small style="color:#666;">(collection: projects)</small></summary>
+                    <pre style="margin-top:15px; background: #263238; color: #aed581; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>{
+  "id": "string",                 // Firestore document ID (projectId / customerId)
+  "name": "string",               // Project display name
+  "description": "string",        // Optional description
+  "tokens": number,               // Purchased tokens
+  "tokensUsed": number,           // Consumed tokens
+  "active": boolean,              // Account status
+  "projectFilePath": "string",    // gs:// path to uploaded project bundle
+  "meshFilePaths": ["string"],    // List of mesh artifact references
+  "lastUpload": "timestamp",      // Most recent upload time
+  "createdAt": "timestamp",       // Account creation date
+  "updatedAt": "timestamp"        // Last modification date
+}</code></pre>
+                </details>
+
+                <details style="background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #ff9800;">
+                    <summary style="cursor:pointer; font-weight:600; color:#333;">Usage Entry <small style="color:#666;">(collection: entries)</small></summary>
+                    <pre style="margin-top:15px; background: #263238; color: #aed581; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>{
+  "id": "string",              // Firestore document ID
+  "projectId": "string",       // Associated project/customer
+  "computeid": "string",       // Associated VM instance
+  "startTime": "timestamp",    // Usage period start
+  "endTime": "timestamp",      // Usage period end
+  "duration": number,          // Duration in minutes
+  "tokensUsed": number,        // Tokens consumed
+  "machineType": "string",     // VM machine type
+  "zone": "string",            // GCP zone
+  "status": "string"           // "completed", "active"
+}</code></pre>
+                </details>
+
+                <details style="background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #f44336;">
+                    <summary style="cursor:pointer; font-weight:600; color:#333;">Log Entry <small style="color:#666;">(collection: logs)</small></summary>
+                    <pre style="margin-top:15px; background: #263238; color: #aed581; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>{
+  "id": "string",              // Firestore document ID
+  "timestamp": "timestamp",    // Log entry time
+  "action": "string",          // Action type (e.g., "VM_START", "VM_STOP")
+  "userId": "string",          // User who performed action
+  "projectId": "string",       // Related project (optional)
+  "computeid": "string",       // Related VM (optional)
+  "message": "string",         // Human-readable description
+  "level": "string",           // "info", "warning", "error"
+  "metadata": object           // Additional contextual data
+}</code></pre>
+                </details>
+
+            </div>
+
+            <h2 style="color: #1a73e8; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0;">API Endpoints</h2>
+
+            <ul class="docs-list">
+                <li class="doc-item">
+                    <h2><a href="viewer.html?doc=createCompute.md">createCompute</a></h2>
+                    <p class="doc-description">
+                        Creates a new Google Compute Engine virtual machine associated with a customer record and tracked in Firestore. Requires mesh/project data uploaded beforehand via `uploadFile`.
+                    </p>
+                    <div class="endpoint-url">POST /createCompute</div>
+                </li>
+
+                <li class="doc-item">
+                    <h2><a href="viewer.html?doc=getComputeState.md">getComputeState</a></h2>
+                    <p class="doc-description">
+                        Returns the latest recorded state for a compute workload by looking up its Google Compute Engine ID in Firestore.
+                    </p>
+                    <div class="endpoint-url">GET /getComputeState</div>
+                </li>
+
+                <li class="doc-item">
+                    <h2><a href="viewer.html?doc=getCredits.md">getCredits</a></h2>
+                    <p class="doc-description">
+                        Returns the token allocation for a given customer, including total tokens, tokens consumed, and computed balance.
+                    </p>
+                    <div class="endpoint-url">GET /getCredits</div>
+                </li>
+
+                <li class="doc-item">
+                    <h2><a href="viewer.html?doc=uploadFile.md">uploadFile</a></h2>
+                    <p class="doc-description">
+                        Uploads mesh or project artifacts to Cloud Storage and ties them to a customer / project so `createCompute` can reference the returned `gs://` URLs.
+                    </p>
+                    <div class="endpoint-url">POST /uploadFile</div>
+                </li>
+
+                <li class="doc-item">
+                    <h2><a href="viewer.html?doc=getSimulationResults.md">getSimulationResults</a></h2>
+                    <p class="doc-description">
+                        Provides the Cloud Storage link for the simulation output once the kernel uploads the result archive.
+                    </p>
+                    <div class="endpoint-url">GET /getSimulationResults</div>
+                </li>
+
+                <li class="doc-item private">
+                    <h2>
+                        <a href="viewer.html?doc=getMachinesByRegion.md">getMachinesByRegion</a>
+                        <span class="badge badge-private">Private</span>
+                    </h2>
+                    <p class="doc-description">
+                        Returns every Google Compute Engine VM in the project grouped by region with zones nested underneath. Private endpoint for internal tooling only.
+                    </p>
+                    <div class="doc-meta">Private</div>
+                    <div class="endpoint-url">GET /getMachinesByRegion</div>
+                </li>
+
+                <li class="doc-item private">
+                    <h2>
+                        <a href="viewer.html?doc=getMachineCatalog.md">getMachineCatalog</a>
+                        <span class="badge badge-private">Private</span>
+                    </h2>
+                    <p class="doc-description">
+                        Fetches every Compute Engine machine type available to the current project and groups them by region and zone. Private endpoint for internal tooling only.
+                    </p>
+                    <div class="doc-meta">Private</div>
+                    <div class="endpoint-url">GET /getMachineCatalog</div>
+                </li>
+            </ul>
+
+            <h2 style="color: #1a73e8; margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0;">Kernels & Utilities</h2>
+
+            <div class="doc-item" style="border-left-color: #4caf50; background: #f1f8f4;">
+                <h2><a href="viewer.html?doc=calculationKernel.md">Calculation Kernel</a></h2>
+                <p class="doc-description">
+                    Standalone executable that performs compute-intensive simulations on provisioned VMs. Takes project file and mesh file as parameters and produces result artifacts.
+                </p>
+                <div class="endpoint-url" style="background: #2e7d32;">calculationKernel.exe --projectFile --meshFile</div>
+            </div>
+
+            <footer>
+                <p>All documentation examples use C++ with libcurl and nlohmann/json</p>
+                <p>&copy; 2024 Optum Admin - Firebase Cloud Functions API</p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
