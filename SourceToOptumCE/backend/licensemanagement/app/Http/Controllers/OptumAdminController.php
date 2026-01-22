@@ -7,6 +7,8 @@ use App\Models\Account;
 use App\Models\AccountMember;
 use App\Models\AccountGroup;
 use App\Models\GroupMember;
+use App\Models\AccountCredit;
+use App\Models\CreditUsageLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +28,9 @@ class OptumAdminController extends Controller
                 // Count members properly
                 $memberCount = AccountMember::where('account_id', $account->id)->count();
 
+                // Get credits for this account
+                $accountCredit = AccountCredit::where('account_id', $account->id)->first();
+
                 return [
                     'id' => $account->id,
                     'name' => $account->name,
@@ -34,6 +39,9 @@ class OptumAdminController extends Controller
                     'type_name' => $this->getAccountTypeName($account->type),
                     'created_date' => $account->created_date,
                     'total_members' => $memberCount,
+                    'credits' => $accountCredit ? (float) $accountCredit->credits : 0,
+                    'credits_used' => $accountCredit ? (float) $accountCredit->credits_used : 0,
+                    'available_credits' => $accountCredit ? (float) ($accountCredit->credits - $accountCredit->credits_used) : 0,
                     'members' => $account->members->map(function ($member) {
                         return [
                             'id' => $member->id,
@@ -89,6 +97,9 @@ class OptumAdminController extends Controller
                 ->with(['members'])
                 ->get();
 
+            // Get credits for this account
+            $accountCredit = AccountCredit::where('account_id', $id)->first();
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -98,6 +109,10 @@ class OptumAdminController extends Controller
                     'type' => $account->type,
                     'type_name' => $this->getAccountTypeName($account->type),
                     'created_date' => $account->created_date,
+                    'credits' => $accountCredit ? (float) $accountCredit->credits : 0,
+                    'credits_used' => $accountCredit ? (float) $accountCredit->credits_used : 0,
+                    'available_credits' => $accountCredit ? (float) ($accountCredit->credits - $accountCredit->credits_used) : 0,
+                    'last_purchase_date' => $accountCredit ? $accountCredit->last_purchase_date : null,
                     'users' => $users->map(function ($user) use ($id) {
                         $membership = AccountMember::where('account_id', $id)
                             ->where('member_id', $user->account_id)
@@ -404,20 +419,32 @@ class OptumAdminController extends Controller
                 ], 400);
             }
 
+            // Pagination parameters
+            $limit = $request->input('limit', 20);
+            $get_all = $request->input('get_all', false);
+
             // Search users
-            $users = User::where('email', 'like', "%{$query}%")
+            $usersQuery = User::where('email', 'like', "%{$query}%")
                 ->orWhere('user_name', 'like', "%{$query}%")
                 ->orWhere('first_name', 'like', "%{$query}%")
                 ->orWhere('last_name', 'like', "%{$query}%")
-                ->with(['account'])
-                ->limit(20)
-                ->get();
+                ->with(['account']);
+
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $users = $usersQuery->get();
+            } else {
+                $users = $usersQuery->limit($limit)->get();
+            }
 
             // Search accounts
-            $accounts = Account::where('name', 'like', "%{$query}%")
-                ->orWhere('domain', 'like', "%{$query}%")
-                ->limit(20)
-                ->get();
+            $accountsQuery = Account::where('name', 'like', "%{$query}%")
+                ->orWhere('domain', 'like', "%{$query}%");
+
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $accounts = $accountsQuery->get();
+            } else {
+                $accounts = $accountsQuery->limit($limit)->get();
+            }
 
             return response()->json([
                 'success' => true,
@@ -480,6 +507,189 @@ class OptumAdminController extends Controller
                 return 'Superadmin';
             default:
                 return 'Unknown';
+        }
+    }
+
+    /**
+     * Record VM usage and deduct credits
+     * Called by OptumAdmin Cloud Functions when a VM stops
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function recordVMUsage(Request $request)
+    {
+        try {
+            $accountId = $request->input('account_id');
+            $creditsUsed = $request->input('credits_used');
+            $vmId = $request->input('vm_id');
+            $vmName = $request->input('vm_name', '');
+            $machineType = $request->input('machine_type', '');
+            $runtimeMinutes = $request->input('runtime_minutes', 0);
+            $zone = $request->input('zone', '');
+
+            if (!$accountId || !$creditsUsed || !$vmId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Missing required fields: account_id, credits_used, vm_id'
+                ], 400);
+            }
+
+            // Get or create account credits record
+            $accountCredit = AccountCredit::firstOrCreate(
+                ['account_id' => $accountId],
+                ['credits' => 0, 'credits_used' => 0]
+            );
+
+            // Check if sufficient credits
+            $availableCredits = $accountCredit->credits - $accountCredit->credits_used;
+            if ($availableCredits < $creditsUsed) {
+                // Still log the usage but flag it as overdraft
+                $description = sprintf(
+                    'VM: %s (%s) - %s min runtime [OVERDRAFT - insufficient credits]',
+                    $vmName ?: $vmId,
+                    $machineType,
+                    round($runtimeMinutes, 1)
+                );
+            } else {
+                $description = sprintf(
+                    'VM: %s (%s) - %s min runtime in %s',
+                    $vmName ?: $vmId,
+                    $machineType,
+                    round($runtimeMinutes, 1),
+                    $zone
+                );
+            }
+
+            // Log the usage
+            $usageLog = CreditUsageLog::create([
+                'account_id' => $accountId,
+                'resource_type' => 'vm',
+                'resource_id' => $vmId,
+                'credits_used' => $creditsUsed,
+                'description' => $description
+            ]);
+
+            // Update credits_used in account_credits
+            $accountCredit->credits_used += $creditsUsed;
+            $accountCredit->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'usage_log_id' => $usageLog->id,
+                    'credits_deducted' => (float) $creditsUsed,
+                    'new_balance' => (float) ($accountCredit->credits - $accountCredit->credits_used),
+                    'total_credits' => (float) $accountCredit->credits,
+                    'total_used' => (float) $accountCredit->credits_used
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error recording VM usage',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Check if account has sufficient credits to start a VM
+     *
+     * @param int $accountId
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkCreditsForVM($accountId, Request $request)
+    {
+        try {
+            $minimumCredits = $request->input('minimum_credits', 1);
+
+            $accountCredit = AccountCredit::where('account_id', $accountId)->first();
+
+            if (!$accountCredit) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'can_start' => false,
+                        'available_credits' => 0,
+                        'minimum_required' => (float) $minimumCredits,
+                        'message' => 'No credits found for this account'
+                    ]
+                ]);
+            }
+
+            $availableCredits = $accountCredit->credits - $accountCredit->credits_used;
+            $canStart = $availableCredits >= $minimumCredits;
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'can_start' => $canStart,
+                    'available_credits' => (float) $availableCredits,
+                    'minimum_required' => (float) $minimumCredits,
+                    'message' => $canStart ? 'Sufficient credits' : 'Insufficient credits to start VM'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error checking credits',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get VM usage logs for an account
+     *
+     * @param int $accountId
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getVMUsageLogs($accountId, Request $request)
+    {
+        try {
+            $limit = $request->input('limit', 50);
+            $getAll = $request->input('get_all', false);
+
+            $query = CreditUsageLog::where('account_id', $accountId)
+                ->where('resource_type', 'vm')
+                ->orderBy('created_date', 'desc');
+
+            if ($getAll === true || $getAll === 'true' || $getAll === '1') {
+                $logs = $query->get();
+            } else {
+                $logs = $query->limit($limit)->get();
+            }
+
+            // Calculate totals
+            $totalCreditsUsed = CreditUsageLog::where('account_id', $accountId)
+                ->where('resource_type', 'vm')
+                ->sum('credits_used');
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'logs' => $logs->map(function ($log) {
+                        return [
+                            'id' => $log->id,
+                            'vm_id' => $log->resource_id,
+                            'credits_used' => (float) $log->credits_used,
+                            'description' => $log->description,
+                            'created_date' => $log->created_date
+                        ];
+                    }),
+                    'total_vm_credits_used' => (float) $totalCreditsUsed,
+                    'count' => $logs->count()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching VM usage logs',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

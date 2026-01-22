@@ -51,21 +51,98 @@
         </div>
       </div>
 
-      <!-- Purchase Tokens Card -->
-      <div class="row">
+      <!-- Custom Token Purchase -->
+      <div class="row" v-if="!isSuperAdmin">
         <div class="col-lg-12">
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading">
-              <i class="fa fa-shopping-cart fa-fw"></i> Purchase Optum Tokens
+              <i class="fa fa-shopping-cart fa-fw"></i> Purchase Optum Tokens - Custom Amount
             </div>
             <div class="panel-body">
               <div v-if="checkoutError" class="alert alert-danger">
                 {{ checkoutError }}
               </div>
 
+              <!-- Custom Token Purchase -->
+              <div class="custom-purchase-section">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h4 style="margin-top: 0; color: #2c3e50;">
+                      <i class="fa fa-bolt"></i> Buy Custom Amount
+                    </h4>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">
+                      Choose exactly how many tokens you need at <strong>€0.20 per token</strong>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <label for="customTokenAmount">Number of Tokens</label>
+                      <input
+                        type="number"
+                        class="form-control input-lg"
+                        id="customTokenAmount"
+                        v-model.number="customTokens"
+                        @input="calculateCustomPrice"
+                        min="100"
+                        max="100000"
+                        step="100"
+                        placeholder="Enter token amount (min: 100)"
+                      />
+                      <small class="text-muted">Minimum: 100 tokens | Maximum: 100,000 tokens</small>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="custom-price-display">
+                      <div class="price-label">Total Price</div>
+                      <div class="price-value">{{ formatPrice(customPrice) }}</div>
+                      <div class="price-detail">€0.20 per token</div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div style="padding-top: 25px;">
+                      <button
+                        class="btn btn-success btn-block btn-lg"
+                        @click="startCustomCheckout"
+                        :disabled="!isValidCustomAmount || customCheckoutLoading"
+                        style="height: 60px; font-size: 18px;"
+                      >
+                        <i v-if="customCheckoutLoading" class="fa fa-spinner fa-spin"></i>
+                        <i v-else class="fa fa-shopping-cart"></i>
+                        <span v-if="customCheckoutLoading"> Processing...</span>
+                        <span v-else> Buy {{ formatNumber(customTokens) }} Tokens</span>
+                      </button>
+                      <div v-if="customCheckoutLoading" class="text-center" style="margin-top: 8px;">
+                        <small class="text-muted">Please do not close this window.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legacy Token Packages (Deprecated) -->
+      <div class="row" v-if="!isSuperAdmin">
+        <div class="col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading" style="background-color: #ecf0f1; color: #7f8c8d;">
+              <i class="fa fa-archive fa-fw"></i> Legacy Token Packages
+              <span class="label label-warning" style="margin-left: 10px;">DEPRECATED</span>
+            </div>
+            <div class="panel-body" style="background-color: #f9f9f9;">
+              <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+                <strong>Note:</strong> These packages are deprecated. Please use the custom token purchase above for better flexibility and pricing.
+              </div>
+
               <div class="row">
                 <div class="col-md-4" v-for="pkg in packages" :key="pkg.id">
-                  <div class="package-card">
+                  <div class="package-card deprecated">
+                    <div class="deprecated-badge">LEGACY</div>
                     <div class="package-header">
                       <h3 class="package-name">{{ pkg.name }}</h3>
                     </div>
@@ -76,10 +153,13 @@
                       </div>
                       <div class="package-description">{{ pkg.description }}</div>
                       <div class="package-price">{{ formatPrice(pkg.price) }}</div>
+                      <div class="package-price-per-token">
+                        €{{ (pkg.price / pkg.tokens).toFixed(2) }} per token
+                      </div>
                     </div>
                     <div class="package-footer">
                       <button
-                        class="btn btn-primary btn-block btn-lg"
+                        class="btn btn-default btn-block btn-lg"
                         @click="startCheckout(pkg.id)"
                         :disabled="checkoutLoading[pkg.id]"
                       >
@@ -368,6 +448,11 @@ export default {
       checkoutLoading: {},
       checkoutError: null,
       apiUrl: process.env.VUE_APP_API_URL || 'http://localhost:8000',
+      // Custom token purchase
+      customTokens: 1000,
+      customPrice: 200,
+      customCheckoutLoading: false,
+      pricing: null,
       // Admin token assignment
       assignForm: {
         account_id: null,
@@ -389,6 +474,9 @@ export default {
     isSuperAdmin() {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       return user && user.role === 2;
+    },
+    isValidCustomAmount() {
+      return this.customTokens >= 100 && this.customTokens <= 100000;
     }
   },
   created() {
@@ -422,8 +510,17 @@ export default {
           // Reload balance
           this.getBalance();
           this.getTransactions();
-          // Clean URL
-          this.$router.replace('/tokens');
+          // Reload all transactions for superadmin
+          if (this.isSuperAdmin) {
+            this.getAllTransactions();
+          }
+          // Clean URL - redirect to appropriate route based on user role
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          if (user.role >= 1) {
+            this.$router.replace('/admin/tokens');
+          } else {
+            this.$router.replace('/tokens');
+          }
         });
       }
     },
@@ -441,6 +538,10 @@ export default {
         }
       } catch (error) {
         console.error('Error loading packages:', error);
+        this.packages = []; // Set empty array to stop loading spinner
+        if (error.response && error.response.status === 401) {
+          this.$router.push('/login');
+        }
       }
     },
     async getBalance() {
@@ -457,6 +558,15 @@ export default {
         }
       } catch (error) {
         console.error('Error loading balance:', error);
+        this.balance = {
+          credits: 0,
+          credits_used: 0,
+          available_credits: 0,
+          last_purchase_date: null
+        };
+        if (error.response && error.response.status === 401) {
+          this.$router.push('/login');
+        }
       }
     },
     async getTransactions() {
@@ -473,6 +583,10 @@ export default {
         }
       } catch (error) {
         console.error('Error loading transactions:', error);
+        this.transactions = []; // Set empty array to stop loading spinner
+        if (error.response && error.response.status === 401) {
+          this.$router.push('/login');
+        }
       }
     },
     async getAllTransactions() {
@@ -496,10 +610,12 @@ export default {
         }
       } catch (error) {
         console.error('Error loading all transactions:', error);
+        this.allTransactions = []; // Always set to empty array
         // If access denied, show appropriate message
         if (error.response && error.response.status === 403) {
-          this.allTransactions = [];
           console.warn('Access denied: SuperAdmin role required');
+        } else if (error.response && error.response.status === 401) {
+          this.$router.push('/login');
         }
       }
     },
@@ -665,6 +781,54 @@ export default {
       this.showAccountSearch = false;
       this.accountSearchQuery = '';
       this.accountSearchResults = [];
+    },
+    calculateCustomPrice() {
+      const pricePerToken = 0.20;
+      this.customPrice = this.customTokens * pricePerToken;
+    },
+    async startCustomCheckout() {
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (!user || !user.account_id) {
+        this.checkoutError = 'User information is missing. Please log in again.';
+        return;
+      }
+
+      if (!this.isValidCustomAmount) {
+        this.checkoutError = 'Please enter a valid token amount between 100 and 100,000.';
+        return;
+      }
+
+      this.checkoutError = null;
+      this.customCheckoutLoading = true;
+
+      try {
+        const response = await axios.post(
+          `${this.apiUrl}/api/credits/checkout-custom`,
+          {
+            tokens: this.customTokens,
+            account_id: user.account_id
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${user.token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (response.data.success && response.data.data.url) {
+          // Redirect to Stripe checkout
+          window.location.href = response.data.data.url;
+        } else {
+          this.checkoutError = 'Failed to create checkout session. Please try again.';
+          this.customCheckoutLoading = false;
+        }
+      } catch (error) {
+        console.error('Error creating custom checkout session:', error);
+        this.checkoutError = (error.response && error.response.data && error.response.data.message) || 'Failed to start checkout. Please try again.';
+        this.customCheckoutLoading = false;
+      }
     }
   }
 };
@@ -783,5 +947,83 @@ export default {
 
 .account-search-item:last-child {
   border-bottom: none;
+}
+
+/* Custom Token Purchase Section */
+.custom-purchase-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #3498db;
+}
+
+.custom-price-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.price-label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  opacity: 0.9;
+}
+
+.price-value {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.price-detail {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Deprecated Package Styles */
+.package-card.deprecated {
+  opacity: 0.8;
+  position: relative;
+  filter: grayscale(30%);
+}
+
+.package-card.deprecated:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.package-card.deprecated .package-header {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+.package-card.deprecated .package-price {
+  color: #7f8c8d;
+}
+
+.deprecated-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f39c12;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.package-price-per-token {
+  font-size: 14px;
+  color: #e74c3c;
+  margin-top: 5px;
+  font-weight: bold;
 }
 </style>

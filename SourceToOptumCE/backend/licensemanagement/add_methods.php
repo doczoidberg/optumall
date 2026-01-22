@@ -1,0 +1,135 @@
+<?php
+
+$file = 'app/Http/Controllers/CreditsController.php';
+$content = file_get_contents($file);
+
+$newMethods = <<<'EOD'
+
+    /**
+     * Get pricing configuration for custom token purchases
+     */
+    public function getPricing()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'price_per_token' => 0.20,
+                'currency' => 'EUR',
+                'min_tokens' => 100,
+                'max_tokens' => 100000
+            ]
+        ]);
+    }
+
+    /**
+     * Create Stripe checkout session for custom token amount
+     */
+    public function createCustomCheckoutSession(Request $request)
+    {
+        $this->validate($request, [
+            'tokens' => 'required|numeric|min:100|max:100000',
+            'account_id' => 'required|numeric'
+        ]);
+
+        try {
+            $user = Auth::user();
+            $accountId = $request->input('account_id');
+            $tokens = $request->input('tokens');
+            $pricePerToken = 0.20; // EUR per token
+            $totalPrice = $tokens * $pricePerToken;
+
+            // Check if user has access
+            if (!$this->userCanAccessAccount($user, $accountId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
+
+            // Set Stripe API key
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+            // Determine success/cancel URLs based on user role
+            $isAdmin = $user->role >= 1;
+            $baseUrl = env('APP_URL');
+            $successUrl = $isAdmin
+                ? $baseUrl . '/#/admin/tokens/success?session_id={CHECKOUT_SESSION_ID}'
+                : $baseUrl . '/#/tokens/success?session_id={CHECKOUT_SESSION_ID}';
+            $cancelUrl = $isAdmin
+                ? $baseUrl . '/#/admin/tokens'
+                : $baseUrl . '/#/tokens';
+
+            // Create checkout session
+            $session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => 'Optum Tokens',
+                            'description' => number_format($tokens) . ' tokens at €' . $pricePerToken . ' per token',
+                        ],
+                        'unit_amount' => round($totalPrice * 100), // Convert to cents
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => $successUrl,
+                'cancel_url' => $cancelUrl,
+                'client_reference_id' => $accountId,
+                'metadata' => [
+                    'account_id' => $accountId,
+                    'tokens' => $tokens,
+                    'price_per_token' => $pricePerToken,
+                    'user_id' => $user->id,
+                    'custom_purchase' => 'true'
+                ]
+            ]);
+
+            // Create pending transaction
+            $transaction = CreditTransaction::create([
+                'account_id' => $accountId,
+                'package_name' => 'Custom Purchase',
+                'credits' => $tokens,
+                'amount' => $totalPrice,
+                'currency' => 'EUR',
+                'status' => 'pending',
+                'stripe_session_id' => $session->id,
+                'metadata' => json_encode([
+                    'custom_purchase' => true,
+                    'tokens' => $tokens,
+                    'price_per_token' => $pricePerToken,
+                    'user_id' => $user->id
+                ])
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'session_id' => $session->id,
+                    'url' => $session->url,
+                    'transaction_id' => $transaction->id,
+                    'tokens' => $tokens,
+                    'total_price' => $totalPrice
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating custom checkout session: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating checkout session',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+EOD;
+
+// Insert before the last closing brace
+$content = rtrim($content);
+if (substr($content, -1) === '}') {
+    $content = substr($content, 0, -1) . $newMethods . "\n}\n";
+}
+
+file_put_contents($file, $content);
+echo "Methods added successfully!\n";

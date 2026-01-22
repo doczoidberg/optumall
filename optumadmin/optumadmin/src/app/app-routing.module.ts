@@ -31,9 +31,10 @@ const routes: Routes = [
 
   { path: "dashboard", component: DashboardComponent, canActivate: [AuthGuard] },
   { path: "usage", component: UsageComponent, canActivate: [AuthGuard] },
-  { path: "customers", component: CustomersComponent, canActivate: [AuthGuard] },
-  { path: "customer", component: CustomerComponent, canActivate: [AuthGuard] },
-  { path: "customer/:id", component: CustomerComponent, canActivate: [AuthGuard] },
+  // Firestore-based customers routes removed - use /accounts instead
+  // { path: "customers", component: CustomersComponent, canActivate: [AuthGuard] },
+  // { path: "customer", component: CustomerComponent, canActivate: [AuthGuard] },
+  // { path: "customer/:id", component: CustomerComponent, canActivate: [AuthGuard] },
   { path: "logs", component: LogsComponent, canActivate: [AuthGuard] },
   { path: "settings", component: SettingsComponent, canActivate: [AuthGuard] },
   { path: "test", component: TestrunnerComponent, canActivate: [AuthGuard] },

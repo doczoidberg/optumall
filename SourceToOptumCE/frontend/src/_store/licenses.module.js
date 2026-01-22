@@ -33,9 +33,17 @@ const mutations = {
     getAllRequest(state) {
         state.all = { loading: true };
     },
-    getAllSuccess(state, licenses) {
-        console.log('all licenses', licenses);
-        state.all = { items: licenses };
+    getAllSuccess(state, response) {
+        console.log('all licenses', response);
+        // Handle both old format (array) and new format (object with licenses array)
+        const licenses = response.licenses || response;
+        const pagination = response.total ? {
+            total: response.total,
+            page: response.page,
+            per_page: response.per_page,
+            total_pages: response.total_pages
+        } : null;
+        state.all = { items: licenses, pagination };
     },
     getAllFailure(state, error) {
         console.error('licenses getAllFailure', error);

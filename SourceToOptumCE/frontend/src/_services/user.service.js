@@ -46,8 +46,19 @@ function register(user) {
     return httpClient().post(`users/register`, JSON.stringify(user));
 }
 
-function getAll() {
-    return httpClient().get(`api/users`);
+function getAll(params = {}) {
+    // For superadmin, fetch all users. For others, default to pagination
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const isSuperAdmin = user && user.role === 2;
+
+    const queryParams = isSuperAdmin
+        ? { get_all: true, ...params }  // Superadmin gets all users
+        : { per_page: 50, page: 1, ...params };  // Others get paginated
+
+    const queryString = Object.keys(queryParams)
+        .map(key => `${key}=${encodeURIComponent(queryParams[key])}`)
+        .join('&');
+    return httpClient().get(`api/users?${queryString}`);
 }
 function getNotifications() {
     return httpClient().get(`api/notification`);

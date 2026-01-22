@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountCredit extends Model
@@ -18,6 +20,7 @@ class AccountCredit extends Model
     protected $casts = [
         'credits' => 'decimal:2',
         'credits_used' => 'decimal:2',
+        'last_purchase_date' => 'datetime',
     ];
 
     public function account()
@@ -39,7 +42,7 @@ class AccountCredit extends Model
     public function addCredits($amount)
     {
         $this->credits += $amount;
-        $this->last_purchase_date = now();
+        $this->last_purchase_date = Carbon::now();
         $this->save();
     }
 

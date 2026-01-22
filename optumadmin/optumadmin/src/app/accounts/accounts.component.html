@@ -150,6 +150,14 @@
                   'bi-arrow-down-up': sortColumn !== 'total_members'
                 }"></i>
               </th>
+              <th (click)="sortBy('available_credits')" style="cursor: pointer;">
+                Credits
+                <i class="bi" [ngClass]="{
+                  'bi-arrow-up': sortColumn === 'available_credits' && sortDirection === 'asc',
+                  'bi-arrow-down': sortColumn === 'available_credits' && sortDirection === 'desc',
+                  'bi-arrow-down-up': sortColumn !== 'available_credits'
+                }"></i>
+              </th>
               <th (click)="sortBy('created_date')" style="cursor: pointer;">
                 Created Date
                 <i class="bi" [ngClass]="{
@@ -184,6 +192,18 @@
               <td>
                 <span class="badge bg-light text-dark">{{ account.total_members }} members</span>
               </td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'bg-success': account.available_credits > 100,
+                  'bg-warning text-dark': account.available_credits > 0 && account.available_credits <= 100,
+                  'bg-secondary': account.available_credits === 0
+                }">
+                  {{ account.available_credits | number:'1.0-0' }}
+                </span>
+                <small class="text-muted d-block" *ngIf="account.credits_used > 0">
+                  Used: {{ account.credits_used | number:'1.0-0' }}
+                </small>
+              </td>
               <td>{{ account.created_date | date:'short' }}</td>
               <td>
                 <button
@@ -195,7 +215,7 @@
               </td>
             </tr>
             <tr *ngIf="paginatedAccounts.length === 0">
-              <td colspan="7" class="text-center text-muted py-4">
+              <td colspan="8" class="text-center text-muted py-4">
                 No accounts found matching your search.
               </td>
             </tr>

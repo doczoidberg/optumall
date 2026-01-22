@@ -377,17 +377,43 @@ class AccountController extends Controller
                 ], 400);
             }
 
+            // Pagination parameters
+            $page = $request->input('page', 1);
+            $per_page = $request->input('per_page', 20);
+            $get_all = $request->input('get_all', false);
+
             // Search by ID or name
-            $accounts = Account::where(function($q) use ($query) {
+            $accountsQuery = Account::where(function($q) use ($query) {
                 $q->where('id', 'LIKE', "%{$query}%")
                   ->orWhere('name', 'LIKE', "%{$query}%");
-            })
-            ->limit(20)
-            ->get();
+            });
+
+            // If get_all is true, return all accounts without pagination
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $accounts = $accountsQuery->get();
+                return response()->json([
+                    'success' => true,
+                    'data' => $accounts,
+                    'total' => $accounts->count(),
+                    'page' => 1,
+                    'per_page' => $accounts->count(),
+                    'total_pages' => 1
+                ]);
+            }
+
+            // Pagination
+            $total = $accountsQuery->count();
+            $accounts = $accountsQuery->skip(($page - 1) * $per_page)
+                ->take($per_page)
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $accounts
+                'data' => $accounts,
+                'total' => $total,
+                'page' => (int)$page,
+                'per_page' => (int)$per_page,
+                'total_pages' => ceil($total / $per_page)
             ]);
 
         } catch (\Exception $e) {

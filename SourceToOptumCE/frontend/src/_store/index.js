@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import { alert } from './alert.module';
 import { account } from './account.module';
+import { accounts } from './accounts.module';
 import { users } from './users.module';
 import { groups } from './groups.module';
 import { licenses } from './licenses.module';
@@ -17,6 +18,7 @@ export const store = new Vuex.Store({
         users,
         groups,
         licenses,
-        products
+        products,
+        accounts
     }
 });

@@ -48,6 +48,60 @@ if (stripeSecretKey) {
     functions.logger.warn("Stripe secret key is not configured. Stripe payment endpoints are disabled.");
 }
 
+// License Management API configuration for credit tracking
+const licenseApiConfig = functions.config().licenseapi || {};
+const LICENSE_API_URL = licenseApiConfig.url || process.env.LICENSE_API_URL || 'http://localhost:8000/api/optumadmin';
+const LICENSE_API_KEY = licenseApiConfig.key || process.env.LICENSE_API_KEY || 'your-secret-api-key-change-this-in-production';
+
+/**
+ * Report VM usage to the License Management API for credit deduction
+ */
+async function reportVMUsageToLicenseAPI(accountId, creditsUsed, vmId, vmName, machineType, runtimeMinutes, zone) {
+    try {
+        const response = await fetch(`${LICENSE_API_URL}/vm/usage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Api-Key': LICENSE_API_KEY
+            },
+            body: JSON.stringify({
+                account_id: accountId,
+                credits_used: creditsUsed,
+                vm_id: vmId,
+                vm_name: vmName,
+                machine_type: machineType,
+                runtime_minutes: runtimeMinutes,
+                zone: zone
+            })
+        });
+        const result = await response.json();
+        functions.logger.info('License API usage report', { accountId, creditsUsed, result });
+        return result;
+    } catch (error) {
+        functions.logger.error('Failed to report usage to License API', { error: error.message, accountId, creditsUsed });
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Check if account has sufficient credits to start a VM
+ */
+async function checkCreditsForVM(accountId, minimumCredits = 1) {
+    try {
+        const response = await fetch(`${LICENSE_API_URL}/vm/check-credits/${accountId}?minimum_credits=${minimumCredits}`, {
+            method: 'GET',
+            headers: {
+                'X-Api-Key': LICENSE_API_KEY
+            }
+        });
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        functions.logger.error('Failed to check credits', { error: error.message, accountId });
+        return { success: false, data: { can_start: true, message: 'Credit check failed, allowing by default' } };
+    }
+}
+
 const paymentPackages = {
     basic: {
         id: "basic",
@@ -6183,7 +6237,7 @@ exports.stopVM = functions.https.onRequest(async (req, response) => {
                 creditsused: creditsused,
                 tokensused: creditsused
             }); // TODO: lag Lösung?
-            // add customer tokens
+            // add customer tokens (Firestore - legacy)
             var oldvalue = (await admin.firestore().doc("customers/" + customerid).get()).data();
             var currentTokensUsed = Number(oldvalue.tokensused ?? oldvalue.creditsused ?? 0);
             var newvalue = currentTokensUsed + creditsused;
@@ -6193,12 +6247,24 @@ exports.stopVM = functions.https.onRequest(async (req, response) => {
                 lastUsage: new Date().getTime()
             });
 
-
-            // add usage log
-
+            // Report usage to License Management API (MySQL backend)
+            // The accountId in the license system should be mapped from customerid
+            // For now, we'll try to use the account_id if it's stored in the customer record
+            var accountId = oldvalue.account_id || customerid;
+            var runtimeMinutes = timediff / 1000 / 60;
+            var licenseApiResult = await reportVMUsageToLicenseAPI(
+                accountId,
+                creditsused,
+                req.body.machinename,
+                req.body.vmname,
+                olddoc.machinetype?.name || 'unknown',
+                runtimeMinutes,
+                zonename
+            );
+            console.log('License API result:', licenseApiResult);
 
             console.log('VM Deleted!')
-            response.send({ success: true });
+            response.send({ success: true, licenseApiResult: licenseApiResult });
         });
 
 
@@ -6306,6 +6372,20 @@ exports.createVM = functions.https.onRequest(async (req, response) => {
             const customerSnapshot = await admin.firestore().doc(`customers/${customerId}`).get();
             if (!customerSnapshot.exists) {
                 response.status(404).json({ error: "Customer not found" });
+                return;
+            }
+            const customerData = customerSnapshot.data();
+
+            // Check credits in License Management API before creating VM
+            const accountId = customerData.account_id || customerId;
+            const creditCheck = await checkCreditsForVM(accountId, 1);
+            if (creditCheck.success && creditCheck.data && !creditCheck.data.can_start) {
+                functions.logger.warn('Insufficient credits to start VM', { accountId, creditCheck });
+                response.status(403).json({
+                    error: "Insufficient credits",
+                    message: creditCheck.data.message,
+                    available_credits: creditCheck.data.available_credits
+                });
                 return;
             }
 

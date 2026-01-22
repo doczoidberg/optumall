@@ -69,8 +69,16 @@ const mutations = {
     getAllRequest(state) {
         state.all = { loading: true };
     },
-    getAllSuccess(state, users) {
-        state.all = { items: users.users };
+    getAllSuccess(state, response) {
+        // Handle both old format and new pagination format
+        const users = response.users || response;
+        const pagination = response.total ? {
+            total: response.total,
+            page: response.page,
+            per_page: response.per_page,
+            total_pages: response.total_pages
+        } : null;
+        state.all = { items: users, pagination };
     },
     getNotificationsSuccess(state, notify) {
         state.notifications = { items: notify };

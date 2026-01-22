@@ -38,9 +38,17 @@ const mutations = {
     getAllRequest(state) {
         state.all = { loading: true };
     },
-    getAllSuccess(state, groups) {
-        console.log('all groups', groups);
-        state.all = { items: groups };
+    getAllSuccess(state, response) {
+        console.log('all groups', response);
+        // Handle both old format (array) and new format (object with data array)
+        const groups = response.data || response;
+        const pagination = response.total ? {
+            total: response.total,
+            page: response.page,
+            per_page: response.per_page,
+            total_pages: response.total_pages
+        } : null;
+        state.all = { items: groups, pagination };
     },
     deleteRequest(state, id) {
         state.all.items = state.all.items.map(group =>

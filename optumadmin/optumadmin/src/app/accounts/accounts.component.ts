@@ -35,7 +35,7 @@ export class AccountsComponent implements OnInit {
   totalPages = 1;
   pageSizeOptions = [10, 20, 50, 100];
 
-  displayedColumns: string[] = ['id', 'name', 'domain', 'type', 'members', 'created', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'domain', 'type', 'members', 'credits', 'created', 'actions'];
 
   // Expose Math for template
   Math = Math;

@@ -12,6 +12,10 @@ export interface Account {
   type_name: string;
   created_date: string;
   total_members: number;
+  credits: number;
+  credits_used: number;
+  available_credits: number;
+  last_purchase_date?: string;
   members?: any[];
   users?: User[];
   groups?: Group[];

@@ -47,6 +47,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         // Credits
         $router->get('credits/balance/{accountId}', 'CreditsController@getBalance');
         $router->get('credits/transactions/{accountId}', 'CreditsController@getTransactions');
+        // VM Usage - Credit deduction for compute
+        $router->post('vm/usage', 'OptumAdminController@recordVMUsage');
+        $router->get('vm/check-credits/{accountId}', 'OptumAdminController@checkCreditsForVM');
+        $router->get('vm/usage-logs/{accountId}', 'OptumAdminController@getVMUsageLogs');
     });
 
     // Stripe webhook (no auth middleware)
@@ -118,11 +122,14 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('/credits/balance[/{accountId}]', 'CreditsController@getBalance');
         $router->get('/credits/transactions[/{accountId}]', 'CreditsController@getTransactions');
         $router->post('/credits/checkout', 'CreditsController@createCheckoutSession');
+        $router->get('/credits/pricing', 'CreditsController@getPricing');
+        $router->post('/credits/checkout-custom', 'CreditsController@createCustomCheckoutSession');
         $router->post('/credits/add-manual', 'CreditsController@addCreditsManual'); // Superadmin only
         $router->get('/credits/all-transactions', 'CreditsController@getAllTransactions'); // Superadmin only
 
         // Admin endpoints
         $router->get('/admin/accounts/search', 'AccountController@searchAccounts'); // Superadmin only
+        $router->get('/admin/stats', 'OptumAdminController@getStats'); // Admin/Superadmin only
         // !Both
     });
 });

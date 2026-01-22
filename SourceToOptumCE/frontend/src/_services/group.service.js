@@ -6,8 +6,13 @@ export const groupService = {
     update,
     delete: _delete
 };
-function getAll() {
-    return  httpClient().get(`api/group`);
+function getAll(params = {}) {
+    // Default to get_all=true to fetch all groups without pagination
+    const queryParams = { get_all: true, ...params };
+    const queryString = Object.keys(queryParams)
+        .map(key => `${key}=${encodeURIComponent(queryParams[key])}`)
+        .join('&');
+    return httpClient().get(`api/group?${queryString}`);
 }
 function update(user) {
     return httpClient().put(`api/group/${user.id}`, JSON.stringify(user));

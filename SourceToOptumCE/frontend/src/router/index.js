@@ -10,12 +10,15 @@ const router = new Router({
   routes: [
     { path: '/admin',
       name: 'Home',
-      redirect: 'admin/licenses',
+      redirect: 'admin/dashboard',
       component: Home,
       children: [
+        { path: 'dashboard', meta: { requiresAuth: true , adminAuth:true , residentAuth : false},name: 'Dashboard', component: () => import('@/components/admin/AdminDashboard') },
         { path: 'licenses', meta: { requiresAuth: true , adminAuth:true , residentAuth : false},name: 'Licenses', component: () => import('@/components/admin/licenses/Licenses') },
         { path: 'licenses-as-user',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'UserLicenses', component: () => import('@/components/admin/licenses/UserLicenses') },
         { path: 'manage-license/:id',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'ManageLicense', component: () => import('@/components/admin/licenses/ManageLicense') },
+        { path: 'tokens', meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'AdminTokens', component: () => import('@/components/user/Tokens') },
+        { path: 'tokens/success', meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'AdminTokensSuccess', component: () => import('@/components/user/Tokens') },
         { path: 'profile', meta: { requiresAuth: true , adminAuth:true , residentAuth : false},name: 'Profile', component: () => import('@/components/admin/customer/Profile') },
         { path: 'profile-update',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'UserEdit', component: () => import('@/components/admin/customer/UserEdit') },
         { path: 'users',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'Users', component: () => import('@/components/admin/customer/Users') },
@@ -23,6 +26,7 @@ const router = new Router({
         { path: 'user/detail/:id',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'UserDetail', component: () => import('@/components/admin/customer/UserDetail') },
         { path: 'group',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'Group', component: () => import('@/components/admin/customer/Group') },
         { path: 'group/grid',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'GroupGrid', component: () => import('@/components/admin/customer/GroupGrid') },
+        { path: 'accounts/grid',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'AccountsGrid', component: () => import('@/components/admin/customer/AccountsGrid') },
         { path: 'reporting',meta: { requiresAuth: true , adminAuth:true , residentAuth : false}, name: 'Report', component: () => import('@/components/admin/Report') }
       ]
     },
@@ -69,7 +73,7 @@ router.beforeEach((to, from, next) => {
       if(isLogin) {
         // Role: 0=user, 1=admin, 2=superadmin
         if(authUser.role >= 1) {
-            next('/admin/licenses');
+            next('/admin/dashboard');
         }
         else {
             next('/licenses');

@@ -267,22 +267,47 @@ class LicenseController extends Controller
 
     //     return response()->json($licenses);
     // }
-    public function getAllByAdmin()
+    public function getAllByAdmin(Request $request)
     {
         $current_user = Auth::user();
         if ($current_user->role < 1) {
             return response()->json(['message' => 'Please login'], 403);
         }
 
-        // Super admin (role=2) sees ALL licenses (limited to 100 for performance)
+        // Super admin (role=2) sees ALL licenses
         if ($current_user->role == 2) {
-            // Use raw query without any appends to avoid slow accessors
-            $licenses = License::with(['product', 'account', 'scheme'])
-                ->limit(100)
+            $page = $request->input('page', 1);
+            $per_page = $request->input('per_page', 100);
+            $get_all = $request->input('get_all', false);
+
+            $query = License::with(['product', 'account', 'scheme']);
+
+            // If get_all is true, return all licenses without pagination
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $licenses = $query->get()->makeHidden(['account', 'accounts']);
+                return response()->json([
+                    'licenses' => $licenses,
+                    'total' => $licenses->count(),
+                    'page' => 1,
+                    'per_page' => $licenses->count(),
+                    'total_pages' => 1
+                ]);
+            }
+
+            // Pagination
+            $total = $query->count();
+            $licenses = $query->skip(($page - 1) * $per_page)
+                ->take($per_page)
                 ->get()
-                ->makeHidden(['account', 'accounts']); // Hide heavy relations
-            // NO setAppends - accessors are too slow
-            return response()->json($licenses);
+                ->makeHidden(['account', 'accounts']);
+
+            return response()->json([
+                'licenses' => $licenses,
+                'total' => $total,
+                'page' => (int)$page,
+                'per_page' => (int)$per_page,
+                'total_pages' => ceil($total / $per_page)
+            ]);
         }
 
         // Regular admin - organization based
@@ -322,7 +347,7 @@ class LicenseController extends Controller
     //     return response()->json($licenses);
     // }
     // GET Licenses by USER ID
-    public function myLicenses($user_id)
+    public function myLicenses(Request $request, $user_id)
     {
         $current_user = Auth::user();
         if ($current_user->role < 1) {
@@ -332,12 +357,24 @@ class LicenseController extends Controller
 
         // Super admin sees all licenses assigned to this user
         if ($current_user->role == 2) {
+            $page = $request->input('page', 1);
+            $per_page = $request->input('per_page', 100);
+            $get_all = $request->input('get_all', false);
+
             $list_license_ids = Assignment::where('account_id', $user->account_id)->pluck('license_id')->toArray();
-            $licenses = License::whereIn('id', $list_license_ids)
+            $query = License::whereIn('id', $list_license_ids)
                 ->orWhere('owner_id', '=', $user->account_id)
-                ->with(['product', 'account', 'scheme', 'accounts'])
-                ->limit(100)
-                ->get();
+                ->with(['product', 'account', 'scheme', 'accounts']);
+
+            // If get_all is true, return all licenses without pagination
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $licenses = $query->get();
+            } else {
+                // Pagination
+                $licenses = $query->skip(($page - 1) * $per_page)
+                    ->take($per_page)
+                    ->get();
+            }
         } else {
             // Regular admin - organization based
             $account = AccountMember::where('member_id', $current_user->account_id)->where('member_role', 1)->first();

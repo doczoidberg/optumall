@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\AccountCredit;
 use App\Models\CreditTransaction;
 use App\Models\CreditUsageLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -170,16 +171,25 @@ class CreditsController extends Controller
                 ], 403);
             }
 
-            $transactions = CreditTransaction::where('account_id', $accountId)
-                ->orderBy('created_date', 'desc')
-                ->limit(50)
-                ->get();
+            // Pagination parameters
+            $limit = $request->input('limit', 50);
+            $get_all = $request->input('get_all', false);
+
+            $query = CreditTransaction::where('account_id', $accountId)
+                ->orderBy('created_date', 'desc');
+
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $transactions = $query->get();
+            } else {
+                $transactions = $query->limit($limit)->get();
+            }
 
             Log::info('getTransactions - Found transactions:', ['count' => $transactions->count()]);
 
             return response()->json([
                 'success' => true,
-                'data' => $transactions
+                'data' => $transactions,
+                'total' => $transactions->count()
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching transactions: ' . $e->getMessage());
@@ -229,6 +239,16 @@ class CreditsController extends Controller
             // Set Stripe API key
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
+            // Determine success/cancel URLs based on user role
+            $isAdmin = $user->role >= 1;
+            $baseUrl = env('APP_URL');
+            $successUrl = $isAdmin
+                ? $baseUrl . '/#/admin/tokens/success?session_id={CHECKOUT_SESSION_ID}'
+                : $baseUrl . '/#/tokens/success?session_id={CHECKOUT_SESSION_ID}';
+            $cancelUrl = $isAdmin
+                ? $baseUrl . '/#/admin/tokens'
+                : $baseUrl . '/#/tokens';
+
             // Create checkout session
             $session = \Stripe\Checkout\Session::create([
                 'payment_method_types' => ['card'],
@@ -244,8 +264,8 @@ class CreditsController extends Controller
                     'quantity' => 1,
                 ]],
                 'mode' => 'payment',
-                'success_url' => env('APP_URL') . '/#/tokens/success?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => env('APP_URL') . '/#/tokens',
+                'success_url' => $successUrl,
+                'cancel_url' => $cancelUrl,
                 'client_reference_id' => $accountId,
                 'metadata' => [
                     'account_id' => $accountId,
@@ -320,7 +340,7 @@ class CreditsController extends Controller
                     // Update transaction status
                     $transaction->status = 'completed';
                     $transaction->stripe_payment_intent = $session->payment_intent;
-                    $transaction->completed_date = now();
+                    $transaction->completed_date = Carbon::now();
                     $transaction->save();
 
                     // Add credits to account
@@ -402,7 +422,7 @@ class CreditsController extends Controller
                 'amount' => 0,
                 'currency' => 'USD',
                 'status' => 'completed',
-                'completed_date' => now(),
+                'completed_date' => Carbon::now(),
                 'metadata' => json_encode([
                     'reason' => $reason,
                     'admin_user_id' => $user->id,
@@ -497,6 +517,125 @@ class CreditsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error fetching transactions',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get pricing configuration for custom token purchases
+     */
+    public function getPricing()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'price_per_token' => 0.20,
+                'currency' => 'EUR',
+                'min_tokens' => 100,
+                'max_tokens' => 100000
+            ]
+        ]);
+    }
+
+    /**
+     * Create Stripe checkout session for custom token amount
+     */
+    public function createCustomCheckoutSession(Request $request)
+    {
+        $this->validate($request, [
+            'tokens' => 'required|numeric|min:100|max:100000',
+            'account_id' => 'required|numeric'
+        ]);
+
+        try {
+            $user = Auth::user();
+            $accountId = $request->input('account_id');
+            $tokens = $request->input('tokens');
+            $pricePerToken = 0.20; // EUR per token
+            $totalPrice = $tokens * $pricePerToken;
+
+            // Check if user has access
+            if (!$this->userCanAccessAccount($user, $accountId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied'
+                ], 403);
+            }
+
+            // Set Stripe API key
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+            // Determine success/cancel URLs based on user role
+            $isAdmin = $user->role >= 1;
+            $baseUrl = env('APP_URL');
+            $successUrl = $isAdmin
+                ? $baseUrl . '/#/admin/tokens/success?session_id={CHECKOUT_SESSION_ID}'
+                : $baseUrl . '/#/tokens/success?session_id={CHECKOUT_SESSION_ID}';
+            $cancelUrl = $isAdmin
+                ? $baseUrl . '/#/admin/tokens'
+                : $baseUrl . '/#/tokens';
+
+            // Create checkout session
+            $session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => 'Optum Tokens',
+                            'description' => number_format($tokens) . ' tokens at €' . $pricePerToken . ' per token',
+                        ],
+                        'unit_amount' => round($totalPrice * 100), // Convert to cents
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => $successUrl,
+                'cancel_url' => $cancelUrl,
+                'client_reference_id' => $accountId,
+                'metadata' => [
+                    'account_id' => $accountId,
+                    'tokens' => $tokens,
+                    'price_per_token' => $pricePerToken,
+                    'user_id' => $user->id,
+                    'custom_purchase' => 'true'
+                ]
+            ]);
+
+            // Create pending transaction
+            $transaction = CreditTransaction::create([
+                'account_id' => $accountId,
+                'package_name' => 'Custom Purchase',
+                'credits' => $tokens,
+                'amount' => $totalPrice,
+                'currency' => 'EUR',
+                'status' => 'pending',
+                'stripe_session_id' => $session->id,
+                'metadata' => json_encode([
+                    'custom_purchase' => true,
+                    'tokens' => $tokens,
+                    'price_per_token' => $pricePerToken,
+                    'user_id' => $user->id
+                ])
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'session_id' => $session->id,
+                    'url' => $session->url,
+                    'transaction_id' => $transaction->id,
+                    'tokens' => $tokens,
+                    'total_price' => $totalPrice
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating custom checkout session: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating checkout session',
                 'error' => $e->getMessage()
             ], 500);
         }

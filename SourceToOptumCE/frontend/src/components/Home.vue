@@ -114,10 +114,16 @@
                     <div class="sidebar-content">
                         <ul class="nav" id="side-menu">
                             <li>
+                            <li>
+                                <router-link to="/admin/dashboard"> <i class="fa fa-dashboard fa-fw"></i><span>Dashboard</span></router-link>
+                            </li>
                                 <router-link to="/admin/profile"> <i class="fa fa-user fa-fw"></i><span>My profile</span></router-link>
                             </li>
                             <li>
                                 <router-link to="/admin/licenses"> <i class="fas fa-key fa-fw"></i><span>Licenses</span></router-link>
+                            </li>
+                            <li>
+                                <router-link to="/admin/tokens"> <i class="fa fa-coins fa-fw"></i><span>Optum Tokens</span></router-link>
                             </li>
                             <li>
                                 <router-link to="/admin/users/grid">  <i class="fa fa-users fa-fw"></i><span>User management</span></router-link>

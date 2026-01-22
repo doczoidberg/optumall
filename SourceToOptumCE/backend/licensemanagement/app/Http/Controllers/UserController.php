@@ -88,6 +88,10 @@ class UserController extends Controller
         // Super admin (role=2) sees ALL users
         if ($current_user->role == 2) {
             $keyword = $request->input('keyword');
+            $page = $request->input('page', 1);
+            $per_page = $request->input('per_page', 500);
+            $get_all = $request->input('get_all', false); // New parameter to get all users
+
             $query = User::query();
             if (trim($keyword) != '') {
                 $query = $query->where(function($q) use ($keyword) {
@@ -95,8 +99,33 @@ class UserController extends Controller
                       ->orWhere('first_name', 'like', '%' . trim($keyword) . '%');
                 });
             }
-            $users = $query->limit(500)->get()->toArray();
-            return response()->json(['users' => $users], 200);
+
+            // If get_all is true, return all users without pagination
+            if ($get_all === true || $get_all === 'true' || $get_all === '1') {
+                $users = $query->get()->toArray();
+                return response()->json([
+                    'users' => $users,
+                    'total' => count($users),
+                    'page' => 1,
+                    'per_page' => count($users),
+                    'total_pages' => 1
+                ], 200);
+            }
+
+            // Pagination
+            $total = $query->count();
+            $users = $query->skip(($page - 1) * $per_page)
+                          ->take($per_page)
+                          ->get()
+                          ->toArray();
+
+            return response()->json([
+                'users' => $users,
+                'total' => $total,
+                'page' => (int)$page,
+                'per_page' => (int)$per_page,
+                'total_pages' => ceil($total / $per_page)
+            ], 200);
         }
 
         // Regular admin - organization based
